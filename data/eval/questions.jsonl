@@ -1,0 +1,50 @@
+{"id":"q01","question":"Nebula는 원본 파일을 수정하는가?","expected_document":"01_architecture.md","answerable":true}
+{"id":"q02","question":"vector-only 기준선은 무엇인가?","expected_document":"01_architecture.md","answerable":true}
+{"id":"q03","question":"검색 결과에는 어떤 원문 위치 정보가 포함되는가?","expected_document":"01_architecture.md","answerable":true}
+{"id":"q04","question":"RRF는 어떤 두 검색 방식을 결합하는가?","expected_document":"02_hybrid_retrieval.md","answerable":true}
+{"id":"q05","question":"약어와 에러 코드는 BM25와 vector 중 무엇이 강한가?","expected_document":"02_hybrid_retrieval.md","answerable":true}
+{"id":"q06","question":"Nebula의 기본 검색 방식은 무엇으로 결정됐나?","expected_document":"02_hybrid_retrieval.md","answerable":true}
+{"id":"q07","question":"reranker는 후보 몇 개에만 적용하는가?","expected_document":"03_reranking.md","answerable":true}
+{"id":"q08","question":"reranking이 늘릴 수 있는 비용은 무엇인가?","expected_document":"03_reranking.md","answerable":true}
+{"id":"q09","question":"reranking 실험에서 Recall@5와 함께 기록할 지표는?","expected_document":"03_reranking.md","answerable":true}
+{"id":"q10","question":"평가 질문은 몇 개인가?","expected_document":"04_eval_plan.md","answerable":true}
+{"id":"q11","question":"평가 질문 라벨에는 어떤 정보가 포함되는가?","expected_document":"04_eval_plan.md","answerable":true}
+{"id":"q12","question":"검색 품질 평가의 핵심 지표를 알려줘","expected_document":"04_eval_plan.md","answerable":true}
+{"id":"q13","question":"모든 사실 주장에 필요한 것은 무엇인가?","expected_document":"05_citation_policy.md","answerable":true}
+{"id":"q14","question":"유효하지 않은 인용 번호가 있으면 어떻게 처리하는가?","expected_document":"05_citation_policy.md","answerable":true}
+{"id":"q15","question":"형식 검증만으로 인용의 의미적 정확성을 증명할 수 있는가?","expected_document":"05_citation_policy.md","answerable":true}
+{"id":"q16","question":"근거가 없는 질문에는 시스템이 어떻게 답하는가?","expected_document":"06_abstention.md","answerable":true}
+{"id":"q17","question":"appropriate abstention은 무엇을 측정하는가?","expected_document":"06_abstention.md","answerable":true}
+{"id":"q18","question":"답변 보류와 그럴듯한 답변 중 무엇을 우선하는가?","expected_document":"06_abstention.md","answerable":true}
+{"id":"q19","question":"증분 색인은 어떤 해시로 변경 파일을 찾는가?","expected_document":"07_incremental_indexing.md","answerable":true}
+{"id":"q20","question":"삭제된 파일의 청크는 어떻게 되는가?","expected_document":"07_incremental_indexing.md","answerable":true}
+{"id":"q21","question":"앱 화면은 색인에 대해 어떤 수를 보여주는가?","expected_document":"07_incremental_indexing.md","answerable":true}
+{"id":"q22","question":"업무 효율은 어떤 두 방식으로 비교하는가?","expected_document":"08_productivity_study.md","answerable":true}
+{"id":"q23","question":"원문 확인 완료 시간은 언제까지 측정하는가?","expected_document":"08_productivity_study.md","answerable":true}
+{"id":"q24","question":"한 명의 사용자 결과를 일반화해도 되는가?","expected_document":"08_productivity_study.md","answerable":true}
+{"id":"q25","question":"공개 저장소에 넣으면 안 되는 항목은 무엇인가?","expected_document":"09_privacy.md","answerable":true}
+{"id":"q26","question":"실사용 결과는 어떤 형태로 남기는가?","expected_document":"09_privacy.md","answerable":true}
+{"id":"q27","question":"예시 데이터로 어떤 문서를 공개할 수 있는가?","expected_document":"09_privacy.md","answerable":true}
+{"id":"q28","question":"0.1 릴리스가 지원하는 파일 확장자는 무엇인가?","expected_document":"10_release_notes.md","answerable":true}
+{"id":"q29","question":"PDF 텍스트 추출 라이브러리는 무엇인가?","expected_document":"10_release_notes.md","answerable":true}
+{"id":"q30","question":"파싱 실패한 파일이 있으면 다른 파일 색인은 계속되는가?","expected_document":"10_release_notes.md","answerable":true}
+{"id":"q31","question":"2026-08-18 회의에서 기본 사용자 경험에 적용하기로 한 검색 방식은?","expected_document":"11_meeting_decision.md","answerable":true}
+{"id":"q32","question":"reranker는 어떤 조건에서만 켜는가?","expected_document":"11_meeting_decision.md","answerable":true}
+{"id":"q33","question":"데모 화면에서 채팅보다 우선하는 두 기능은 무엇인가?","expected_document":"11_meeting_decision.md","answerable":true}
+{"id":"q34","question":"지연시간은 어떤 백분위로 기록하는가?","expected_document":"12_latency_budget.md","answerable":true}
+{"id":"q35","question":"LLM 생성이 추가될 때 어떤 시간을 분리해 측정하는가?","expected_document":"12_latency_budget.md","answerable":true}
+{"id":"q36","question":"개인용 도구 초기에는 어떤 색인 흐름을 유지하는가?","expected_document":"12_latency_budget.md","answerable":true}
+{"id":"q37","question":"질의당 평균 비용은 어떤 세 부분으로 나누는가?","expected_document":"13_cost_note.md","answerable":true}
+{"id":"q38","question":"API 키가 없을 때 어떤 embedding과 답변 방식으로 동작하는가?","expected_document":"13_cost_note.md","answerable":true}
+{"id":"q39","question":"Responses API에 전체 문서를 매 질의 전송하는가?","expected_document":"13_cost_note.md","answerable":true}
+{"id":"q40","question":"기준선 청킹 크기와 중첩 크기는 얼마인가?","expected_document":"14_chunking.md","answerable":true}
+{"id":"q41","question":"구조 기반 청킹은 어떤 문서 경계를 보존하는가?","expected_document":"14_chunking.md","answerable":true}
+{"id":"q42","question":"청킹 선택은 어떤 두 기준으로 결정하는가?","expected_document":"14_chunking.md","answerable":true}
+{"id":"q43","question":"실패 분석의 세 종류는 무엇인가?","expected_document":"15_failure_analysis.md","answerable":true}
+{"id":"q44","question":"검색 실패는 언제 기록하는가?","expected_document":"15_failure_analysis.md","answerable":true}
+{"id":"q45","question":"각 실험에서 사람이 검토할 대표 사례의 최소 수는?","expected_document":"15_failure_analysis.md","answerable":true}
+{"id":"q46","question":"검색 결과 카드가 표시하는 네 가지 정보는?","expected_document":"16_source_workflow.md","answerable":true}
+{"id":"q47","question":"사용자는 인용 묶음을 어디에 복사할 수 있는가?","expected_document":"16_source_workflow.md","answerable":true}
+{"id":"q48","question":"프락시노스-8841의 사육법은 무엇인가?","expected_document":null,"answerable":false}
+{"id":"q49","question":"xylophonium_77의 궤도 반지름은 얼마인가?","expected_document":null,"answerable":false}
+{"id":"q50","question":"보랏빛 카카포의 비행 속도를 알려줘","expected_document":null,"answerable":false}

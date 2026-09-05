@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>개인 업무 문서 검색</title>
+<style>
+body{font:16px system-ui;max-width:960px;margin:40px auto;padding:0 20px;color:#182d35;background:#f7f9fa}h1{margin-bottom:8px}.card{background:white;border:1px solid #d9e2e6;border-radius:12px;padding:20px;margin:16px 0}button,a{cursor:pointer}button{border:1px solid #aabfc5;border-radius:6px;background:white;padding:10px 14px}button:disabled{opacity:.5;cursor:wait}input{padding:12px;width:100%;box-sizing:border-box;border:1px solid #aabfc5;border-radius:6px;font:inherit}.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}small{color:#52656e}pre{white-space:pre-wrap;font:inherit;line-height:1.7}a{color:#156477}#notice{min-height:24px}#scope{overflow-wrap:anywhere}label{display:block;margin-bottom:8px}
+</style>
+<h1>개인 업무 문서 검색</h1>
+<p>기억나는 내용으로 문서를 찾고, 답변의 근거를 확인하세요.</p>
+<section class="card"><p id="scope"></p><small id="status">색인 상태 확인 중…</small><div class="actions"><button id="index">변경 파일 색인</button></div></section>
+<form class="card" id="form"><label for="q">찾고 싶은 내용 또는 질문</label><input id="q" required placeholder="예: 배포 일정이 변경된 이유"><div class="actions"><button type="submit">검색</button><button type="button" id="ask">질문</button></div><p><small>검색: 관련 문단 목록 · 질문: 검색한 근거를 바탕으로 답변</small></p></form>
+<p id="notice" role="status" aria-live="polite"></p><main id="out"></main>
+<script>
+const out=document.querySelector('#out'), notice=document.querySelector('#notice');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path,options){const response=await fetch(path,options);const body=await response.json();if(!response.ok)throw Error(body.error||'요청 실패');return body}
+function sourceCard(r){const text=r.text??r.excerpt;const label=(r.number?'['+r.number+'] ':'')+r.title;return `<section class="card"><b>${esc(label)}</b><p><small>${esc(r.path)} · ${esc(r.location)}</small></p><pre>${esc(text)}</pre><div class="actions"><a href="/source?id=${encodeURIComponent(r.chunk_id)}#evidence" target="_blank" rel="noopener">근거 위치 확인</a><button class="copy" data-citation="${esc('['+label+' — '+r.location+'] '+text)}">인용 복사</button></div></section>`}
+async function refresh(){const s=await api('/api/status');document.querySelector('#scope').textContent='검색 폴더: '+s.source_directory;document.querySelector('#status').textContent=`문서 ${s.documents}개 · 청크 ${s.chunks}개 · 마지막 문서 갱신 ${s.last_indexed_at||'없음'} · ${s.embedding_mode.startsWith('local:')?'로컬 검색':'API 의미 검색'}`}
+async function run(message,fn){document.querySelectorAll('button').forEach(b=>b.disabled=true);notice.textContent=message;try{await fn();notice.textContent='완료'}catch(e){notice.textContent='처리 실패: '+e.message}finally{document.querySelectorAll('button').forEach(b=>b.disabled=false)}}
+document.querySelector('#index').onclick=()=>run('변경 파일 확인 및 색인 중…',async()=>{const s=await api('/api/index',{method:'POST'});out.innerHTML=`<section class="card">추가/변경 ${s.indexed} · 건너뜀 ${s.skipped} · 제거 ${s.removed}<pre>${esc(s.failed.join('\n'))}</pre></section>`;await refresh()});
+document.querySelector('#form').onsubmit=e=>{e.preventDefault();run('검색 중…',async()=>{const rows=await api('/api/search?q='+encodeURIComponent(document.querySelector('#q').value));out.innerHTML=rows.length?rows.map(sourceCard).join(''):'<p>결과가 없습니다.</p>'})};
+document.querySelector('#ask').onclick=()=>{if(!document.querySelector('#form').reportValidity())return;run('근거 검색 및 답변 중…',async()=>{const a=await api('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:document.querySelector('#q').value})});out.innerHTML=`<section class="card"><b>${esc({abstained:'답변 보류',conflict:'상충 가능성 확인 필요',fallback:'원문 발췌',answered:'답변'}[a.status]||a.status)}</b><pre>${esc(a.text)}</pre>${a.error?'<p>'+esc(a.error)+'</p>':''}</section>`+a.sources.map(sourceCard).join('')})};
+out.addEventListener('click',async e=>{if(!e.target.classList.contains('copy'))return;try{await navigator.clipboard.writeText(e.target.dataset.citation);notice.textContent='인용을 복사했습니다'}catch{notice.textContent='복사하지 못했습니다. 근거 본문을 선택해 복사해 주세요.'}});
+refresh().catch(e=>notice.textContent=e.message);
+</script>
+</html>

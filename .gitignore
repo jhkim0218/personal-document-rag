@@ -1,0 +1,16 @@
+.local/
+.env
+data/private/
+__pycache__/
+*.py[cod]
+.env.*
+!.env.example
+.venv/
+venv/
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+GATES.md
+IMPROVEMENT_GATES.md
+.unlazy/

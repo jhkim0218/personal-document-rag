@@ -1,0 +1,1347 @@
+{
+  "schema_version": 2,
+  "run": {
+    "time_utc": "2026-09-04T23:57:45.068110+00:00",
+    "python": "3.13.9",
+    "mode": "offline",
+    "embedding": "local:hash-256",
+    "answer": "extractive",
+    "top_k": 5,
+    "chunking": {
+      "max_chars": 900,
+      "overlap_chars": 160,
+      "structure": true
+    },
+    "questions_sha256": "a9f2ccb4f6241b3c93bf042f73a9e51bb3c24cd593df093958428f3fd27b051a",
+    "corpus_files_sha256": {
+      "01_architecture.md": "5fb0c97dd9bf4d5ee37f22948ad77f5971c8dda6de50d0b3cc3c5e2a81e29ecb",
+      "02_hybrid_retrieval.md": "4dfacaf9110073000dc2131d4b0fc23f156b6e4c56e9d88a9a7256c863141765",
+      "03_reranking.md": "f0e376134553274bf2bcfc633b0174e3dfc455d6490f7e298c0d647cc777eddf",
+      "04_eval_plan.md": "068f2d6d008abc51653ac19c57667514d5b998bbc2339b549e6ea1b0ea746510",
+      "05_citation_policy.md": "25311d6c0a5a687ca7f9c65c5d2fa784418c105b002f2ea0e51642d81672b54d",
+      "06_abstention.md": "9c87ce07d2383b3774b90cf0583bcf1cafdbb6204f22c8b1ce32fcd1b544ef58",
+      "07_incremental_indexing.md": "d3a47877492350c00e7c361d766d7e78fd8f129e33818f28e7869fc6695375eb",
+      "08_productivity_study.md": "5c935bea6e33b1e9bb247f2aba42d3ce65aef42ebf215352df488c38f6292be5",
+      "09_privacy.md": "2918b74c8cf298de24cfee888c0f632c191602f04bd67edd7b9fbb91c1799be3",
+      "10_release_notes.md": "013e4549352f40acd733ad3b546d22785cf9bf06ba3cb11f52d41fb9a17af063",
+      "11_meeting_decision.md": "52caeb3e650af68d1f07f781487be0ab8c766dd9ca7b67fa53261f0eded97bc0",
+      "12_latency_budget.md": "f4ad9692689c649b48733f73bf69e06c57f6386a8721147d6b12a9ad8b14134e",
+      "13_cost_note.md": "ad49c8ba100e43d8d20c936b452f478fc24c007266976acda02bc41444b3b58b",
+      "14_chunking.md": "96453b562ec624c7ae0358e50656127c26b56ac03a749ea8673c80d468822f6c",
+      "15_failure_analysis.md": "709a1f9fdcee4cf90d027b934c380e14e016babb4ea77e4d02e52b21423b84d4",
+      "16_source_workflow.md": "77ed1fb0618a7ce04f644a5076e594a0c2754cb94706b72574e6efba9cd5a07d",
+      "17_openai_usage.md": "3219343e3d48c2869ec32e1aef993981c23dab46714c723d3c7ac967e0b0f9d3",
+      "18_runbook.md": "b8091d7d6a8b4019a90a0cf880e91987a5885f99f89b68c1c2f86110b2ac8fde",
+      "19_resume_story.md": "12df6cd42c43c36664747503179a99bb13c3f46370266a6a7fb20f9d83519fc3",
+      "20_ontology_scope.md": "097758c68584f11a3d3f3b221a24a1380b274887c6e068420620a0050673d33a"
+    },
+    "code_sha256": {
+      "rag\\__init__.py": "bfd8f2f58544a30231cbc2156dba49130b49dac80711d6cda74107be8028356b",
+      "rag\\answer.py": "6e84c924a58295a8bcb4fd2ba9fcb1503d369cf6407a7711ef23796afb07e358",
+      "rag\\documents.py": "029e5e94a74247d427ea03b918e4d39c83861c199fe9b15e2f4fe785fe58df0f",
+      "rag\\embeddings.py": "81fd4888d4233502bbc8fd39cc1ea3b4effca10878e97480126d816ecaef291e",
+      "rag\\index.py": "9f9c2137a1675ae8657dc6c6f19934efc8595f62028e63a1484b33b744296baa",
+      "rag\\service.py": "d738dda5e790527c684354ec5347a423a09517a389c4260b7d0d1033e44305be",
+      "rag\\text.py": "13581b04270cb5f26ab150f17d67ed5fbe20fb74abdb2998e45a5ac66a82b684",
+      "scripts\\run_eval.py": "d2d4776cf857da97646841991e29da33b77471f27b89e36a0806e9ca5c0047cc"
+    },
+    "api_calls": 0
+  },
+  "limitations": [
+    "Citation presence and gold-file agreement are proxies, not semantic grounding.",
+    "Semantic citation precision and grounding are unmeasured (null).",
+    "Unanswerable set contains only three questions; no general abstention claim.",
+    "Offline API cost is zero; local compute and human review costs are not measured."
+  ],
+  "corpus": 20,
+  "variants": [
+    {
+      "mode": "vector",
+      "rerank": false,
+      "questions": 50,
+      "answerable_questions": 47,
+      "unanswerable_questions": 3,
+      "document_hit_at_5": 0.723404255319149,
+      "gold_document_citation_rate": 0.5319148936170213,
+      "citation_presence_rate": 0.9361702127659575,
+      "semantic_citation_precision": null,
+      "grounded_answer_rate": null,
+      "appropriate_abstention": 1.0,
+      "p50_search_latency_ms": 1.676,
+      "p95_search_latency_ms": 2.122,
+      "p50_answer_latency_ms": 0.012,
+      "p95_answer_latency_ms": 0.041,
+      "p50_total_latency_ms": 1.688,
+      "p95_total_latency_ms": 2.205,
+      "estimated_cost_per_query_usd": 0.0,
+      "cases": [
+        {
+          "id": "q01",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q02",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q03",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q04",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q05",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q06",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q07",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q08",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q09",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "19_resume_story.md"
+        },
+        {
+          "id": "q10",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q11",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q12",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q13",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "17_openai_usage.md"
+        },
+        {
+          "id": "q14",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q15",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q16",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q17",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q18",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q19",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q20",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q21",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q22",
+          "hit": false,
+          "answer_status": "abstained",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q23",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q24",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q25",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q26",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q27",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q28",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q29",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q30",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q31",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q32",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q33",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q34",
+          "hit": false,
+          "answer_status": "abstained",
+          "top_result": "19_resume_story.md"
+        },
+        {
+          "id": "q35",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q36",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q37",
+          "hit": false,
+          "answer_status": "abstained",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q38",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q39",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q40",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q41",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "17_openai_usage.md"
+        },
+        {
+          "id": "q42",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "19_resume_story.md"
+        },
+        {
+          "id": "q43",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q44",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q45",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q46",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q47",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q48",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "20_ontology_scope.md"
+        },
+        {
+          "id": "q49",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "17_openai_usage.md"
+        },
+        {
+          "id": "q50",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "20_ontology_scope.md"
+        }
+      ]
+    },
+    {
+      "mode": "keyword",
+      "rerank": false,
+      "questions": 50,
+      "answerable_questions": 47,
+      "unanswerable_questions": 3,
+      "document_hit_at_5": 0.9574468085106383,
+      "gold_document_citation_rate": 0.7647058823529411,
+      "citation_presence_rate": 0.9787234042553191,
+      "semantic_citation_precision": null,
+      "grounded_answer_rate": null,
+      "appropriate_abstention": 1.0,
+      "p50_search_latency_ms": 1.131,
+      "p95_search_latency_ms": 1.339,
+      "p50_answer_latency_ms": 0.012,
+      "p95_answer_latency_ms": 0.033,
+      "p50_total_latency_ms": 1.153,
+      "p95_total_latency_ms": 1.352,
+      "estimated_cost_per_query_usd": 0.0,
+      "cases": [
+        {
+          "id": "q01",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "01_architecture.md"
+        },
+        {
+          "id": "q02",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "01_architecture.md"
+        },
+        {
+          "id": "q03",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q04",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q05",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q06",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q07",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q08",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q09",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q10",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q11",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q12",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q13",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q14",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q15",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q16",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "06_abstention.md"
+        },
+        {
+          "id": "q17",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "06_abstention.md"
+        },
+        {
+          "id": "q18",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q19",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q20",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q21",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q22",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q23",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q24",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q25",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q26",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q27",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q28",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q29",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q30",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q31",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q32",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q33",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q34",
+          "hit": false,
+          "answer_status": "abstained",
+          "top_result": null
+        },
+        {
+          "id": "q35",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q36",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q37",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q38",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q39",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q40",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q41",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q42",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q43",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q44",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q45",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q46",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q47",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q48",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": null
+        },
+        {
+          "id": "q49",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": null
+        },
+        {
+          "id": "q50",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": null
+        }
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "rerank": false,
+      "questions": 50,
+      "answerable_questions": 47,
+      "unanswerable_questions": 3,
+      "document_hit_at_5": 0.9361702127659575,
+      "gold_document_citation_rate": 0.6078431372549019,
+      "citation_presence_rate": 0.9787234042553191,
+      "semantic_citation_precision": null,
+      "grounded_answer_rate": null,
+      "appropriate_abstention": 1.0,
+      "p50_search_latency_ms": 1.937,
+      "p95_search_latency_ms": 3.197,
+      "p50_answer_latency_ms": 0.013,
+      "p95_answer_latency_ms": 0.047,
+      "p50_total_latency_ms": 1.95,
+      "p95_total_latency_ms": 3.231,
+      "estimated_cost_per_query_usd": 0.0,
+      "cases": [
+        {
+          "id": "q01",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "01_architecture.md"
+        },
+        {
+          "id": "q02",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q03",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q04",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q05",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q06",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q07",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q08",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q09",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "19_resume_story.md"
+        },
+        {
+          "id": "q10",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q11",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q12",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q13",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q14",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q15",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q16",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q17",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q18",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q19",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q20",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q21",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q22",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q23",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q24",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q25",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q26",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q27",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q28",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q29",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q30",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q31",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q32",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q33",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q34",
+          "hit": false,
+          "answer_status": "abstained",
+          "top_result": "19_resume_story.md"
+        },
+        {
+          "id": "q35",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q36",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q37",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q38",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q39",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q40",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q41",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q42",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q43",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q44",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q45",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q46",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q47",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q48",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "20_ontology_scope.md"
+        },
+        {
+          "id": "q49",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "17_openai_usage.md"
+        },
+        {
+          "id": "q50",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "20_ontology_scope.md"
+        }
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "rerank": true,
+      "questions": 50,
+      "answerable_questions": 47,
+      "unanswerable_questions": 3,
+      "document_hit_at_5": 0.9574468085106383,
+      "gold_document_citation_rate": 0.7058823529411765,
+      "citation_presence_rate": 0.9787234042553191,
+      "semantic_citation_precision": null,
+      "grounded_answer_rate": null,
+      "appropriate_abstention": 1.0,
+      "p50_search_latency_ms": 1.961,
+      "p95_search_latency_ms": 2.249,
+      "p50_answer_latency_ms": 0.013,
+      "p95_answer_latency_ms": 0.035,
+      "p50_total_latency_ms": 1.974,
+      "p95_total_latency_ms": 2.262,
+      "estimated_cost_per_query_usd": 0.0,
+      "cases": [
+        {
+          "id": "q01",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "01_architecture.md"
+        },
+        {
+          "id": "q02",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "01_architecture.md"
+        },
+        {
+          "id": "q03",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q04",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q05",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q06",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q07",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q08",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q09",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q10",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "02_hybrid_retrieval.md"
+        },
+        {
+          "id": "q11",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q12",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q13",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q14",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q15",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "05_citation_policy.md"
+        },
+        {
+          "id": "q16",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q17",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "04_eval_plan.md"
+        },
+        {
+          "id": "q18",
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q19",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q20",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q21",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "07_incremental_indexing.md"
+        },
+        {
+          "id": "q22",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q23",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q24",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
+        },
+        {
+          "id": "q25",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q26",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q27",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q28",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "09_privacy.md"
+        },
+        {
+          "id": "q29",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q30",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q31",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q32",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
+        },
+        {
+          "id": "q33",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "11_meeting_decision.md"
+        },
+        {
+          "id": "q34",
+          "hit": false,
+          "answer_status": "abstained",
+          "top_result": "19_resume_story.md"
+        },
+        {
+          "id": "q35",
+          "hit": true,
+          "answer_status": "conflict",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q36",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "12_latency_budget.md"
+        },
+        {
+          "id": "q37",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q38",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q39",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "13_cost_note.md"
+        },
+        {
+          "id": "q40",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q41",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q42",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "14_chunking.md"
+        },
+        {
+          "id": "q43",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "10_release_notes.md"
+        },
+        {
+          "id": "q44",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q45",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "15_failure_analysis.md"
+        },
+        {
+          "id": "q46",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q47",
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "16_source_workflow.md"
+        },
+        {
+          "id": "q48",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "20_ontology_scope.md"
+        },
+        {
+          "id": "q49",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "17_openai_usage.md"
+        },
+        {
+          "id": "q50",
+          "hit": true,
+          "answer_status": "abstained",
+          "top_result": "20_ontology_scope.md"
+        }
+      ]
+    }
+  ]
+}
