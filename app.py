@@ -4,6 +4,7 @@ import argparse
 import json
 import hashlib
 import webbrowser
+from datetime import datetime
 from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -85,7 +86,8 @@ def make_handler(service: RAGService):
                             raise ValueError("Invalid evidence span")
                         content = escape(source["text"][:start]) + '<mark id="quote">' + escape(source["text"][start:end]) + '</mark>' + escape(source["text"][end:])
                     body = '<!doctype html><html lang="ko"><meta charset="utf-8"><title>근거 확인</title><style>body{font:16px system-ui;max-width:900px;margin:2rem auto;padding:1rem}pre{white-space:pre-wrap;line-height:1.8;background:#f4f6f8;padding:1rem}</style>'
-                    body += f'<a href="/">검색으로 돌아가기</a><h1>{escape(source["title"])}</h1><p>{escape(source["path"])}</p><p>{escape(source["location"])}</p><p>색인 당시 본문 · {escape(source["indexed_at"])}</p><pre id="evidence">{content}</pre>'
+                    file_modified = datetime.fromtimestamp(int(source['mtime_ns']) / 1_000_000_000).astimezone().isoformat(timespec='seconds')
+                    body += f'<a href="/">검색으로 돌아가기</a><h1>{escape(str(source["title"]))}</h1><p>{escape(str(source["path"]))}</p><p>{escape(str(source["location"]))}</p><p>색인 당시 본문 · {escape(str(source["indexed_at"]))}</p><p>파일 시스템 수정 시각 · {escape(file_modified)} (원문에 적힌 결정 날짜와 다름)</p><pre id="evidence">{content}</pre>'
                     page = source["location"].split(" ·")[0].removeprefix("page ")
                     fragment = f"#page={page}" if page.isdigit() else ""
                     body += f'<a href="/api/file?id={source["chunk_id"]}{fragment}">원본 파일 확인</a></html>'

@@ -227,13 +227,13 @@ class RAGIndex:
         return {"documents": document_count, "chunks": chunk_count, "last_indexed_at": last_indexed, "fts_enabled": self.fts_enabled, "embedding_mode": self.embeddings.mode,
                 "reranker_mode": f"local:cross-encoder:{self.reranker.name}" if self.reranker else "rules", "ocr_mode": self.ocr.mode if self.ocr else "off", "hwp_mode": self.hwp.mode if self.hwp else "off"}
 
-    def source(self, chunk_id: str) -> dict[str, str] | None:
+    def source(self, chunk_id: str) -> dict[str, object] | None:
         row = self.connection.execute(
-            "SELECT c.chunk_id, c.path, c.title, c.location, c.text, d.content_hash, d.indexed_at FROM chunks c JOIN documents d USING(document_id) WHERE chunk_id = ? AND (? IS NULL OR d.source_root = ?) AND path_visible(c.path)", (chunk_id, self.source_root, self.source_root)
+            "SELECT c.chunk_id, c.path, c.title, c.location, c.text, d.content_hash, d.indexed_at, d.mtime_ns FROM chunks c JOIN documents d USING(document_id) WHERE chunk_id = ? AND (? IS NULL OR d.source_root = ?) AND path_visible(c.path)", (chunk_id, self.source_root, self.source_root)
         ).fetchone()
         return dict(row) if row else None
 
-    def document_source(self, path: str) -> dict[str, str] | None:
+    def document_source(self, path: str) -> dict[str, object] | None:
         row = self.connection.execute('SELECT chunk_id FROM chunks WHERE path=? ORDER BY rowid LIMIT 1', (str(Path(path).resolve()),)).fetchone()
         return self.source(row['chunk_id']) if row else None
 

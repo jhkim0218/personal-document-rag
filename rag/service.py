@@ -144,7 +144,7 @@ class RAGService:
         with self.lock:
             return related_bundle(query, self.index.search(query, limit=20, mode="hybrid", rerank=True))
 
-    def source(self, chunk_id: str) -> dict[str, str] | None:
+    def source(self, chunk_id: str) -> dict[str, object] | None:
         with self.lock:
             return self.index.source(chunk_id)
 

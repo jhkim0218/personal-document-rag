@@ -49,6 +49,7 @@ class WebTests(unittest.TestCase):
         self.assertIn("[1]", answer["text"])
         source = self.request("/api/source?id=" + results[0]["chunk_id"])
         self.assertTrue(source["path"].endswith("guide.md"))
+        self.assertEqual(source['mtime_ns'], (self.source/'guide.md').stat().st_mtime_ns)
 
     def test_request_deadline_script_is_served_as_javascript(self) -> None:
         with urllib.request.urlopen(self.base + "/request.js") as response:
@@ -160,6 +161,8 @@ class WebTests(unittest.TestCase):
         self.assertIn("&lt;script&gt;", page)
         self.assertNotIn("<script>", page)
         self.assertIn("evidence " * 80, page)
+        self.assertIn('파일 시스템 수정 시각', page)
+        self.assertIn('원문에 적힌 결정 날짜와 다름', page)
         with urllib.request.urlopen(self.base + "/api/file?id=" + chunk_id) as response:
             self.assertEqual(response.read(), document.read_bytes())
         document.write_text("Changed after indexing", encoding="utf-8")
