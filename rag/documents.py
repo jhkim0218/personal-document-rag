@@ -10,7 +10,7 @@ from xml.etree import ElementTree
 from .text import chunk_text
 
 
-SUPPORTED_EXTENSIONS = {".pdf", ".md", ".markdown", ".txt", ".docx", ".pptx", ".xlsx", ".hwpx"}
+SUPPORTED_EXTENSIONS = {".pdf", ".md", ".markdown", ".txt", ".docx", ".pptx", ".xlsx", ".hwp", ".hwpx"}
 
 
 @dataclass(frozen=True)
@@ -48,7 +48,7 @@ def content_hash(path: Path) -> str:
     return digest.hexdigest()
 
 
-def parse_document(path: Path, ocr=None) -> ParsedDocument:
+def parse_document(path: Path, ocr=None, hwp=None) -> ParsedDocument:
     extension = path.suffix.lower()
     if extension not in SUPPORTED_EXTENSIONS:
         raise ValueError(f"Unsupported document type: {path.suffix}")
@@ -62,6 +62,10 @@ def parse_document(path: Path, ocr=None) -> ParsedDocument:
         sections = _parse_xlsx(path)
     elif extension == ".hwpx":
         sections = _parse_hwpx(path)
+    elif extension == ".hwp":
+        if not hwp:
+            raise ValueError('Binary HWP requires --hwp-executable or conversion to HWPX/TXT')
+        sections = [ParsedSection('HWP text', hwp.text(path))]
     elif extension in {".md", ".markdown"}:
         sections = _parse_markdown(path)
     else:

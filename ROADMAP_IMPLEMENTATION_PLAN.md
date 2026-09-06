@@ -45,10 +45,10 @@
 
 ## 진행 기록 — 업무 문서 형식 확장
 
-- 무엇: 표준 라이브러리 ZIP/XML 파서로 PPTX의 슬라이드 텍스트, XLSX의 시트명·셀 좌표·shared/inline 문자열·저장된 수식 결과, HWPX의 절 텍스트를 추출하고 기존 청킹·색인·출처 위치에 연결했다.
+- 무엇: 표준 라이브러리 ZIP/XML 파서로 PPTX의 슬라이드 텍스트, XLSX의 시트명·셀 좌표·shared/inline 문자열·저장된 수식 결과, HWPX의 절 텍스트와 명시적 local HWP v5 변환기의 파일 단위 텍스트를 추출하고 기존 청킹·색인·출처 위치에 연결했다.
 - 왜: 회의 자료와 결정 표가 PDF/DOCX 밖에 있으면 검색 범위가 넓어도 실제 업무 자료가 누락된다. 출처는 파일명만이 아니라 슬라이드/셀/절까지 보여야 원문을 재확인할 수 있다.
-- 검증: ZIP fixture로 슬라이드 정렬, 시트 `Decisions`의 A1/B1/C1 위치와 값/수식, HWPX section 1 위치, 세 형식까지 포함한 7개 문서 색인을 검증했다. 기존 소스 설정 테스트도 통과했다.
-- 한계: 구형 바이너리 HWP, 암호화 Office 파일, 차트/이미지/OCR, 수식 재계산은 처리하지 않는다. HWPX는 새 XML 기반 형식이며 HWP 자체 지원을 주장하지 않는다. 실제 대형 업무 통합문서의 표 의미/병합 셀 품질은 아직 검수하지 않았다.
+- 검증: ZIP fixture로 슬라이드 정렬, 시트 `Decisions`의 A1/B1/C1 위치와 값/수식, HWPX section 1 위치, 명시적 HWP converter의 출력/실패/백그라운드 전달을 검증했다. 기존 소스 설정 테스트도 통과했다.
+- 한계: HWP v5 변환은 사용자 제공 변환기에만 의존하며 `HWP text` 파일 단위 위치다. 암호화 Office/HWP, 차트/이미지 의미, 수식 재계산, HWP 절 구조와 실제 대형 업무 통합문서의 병합 셀 품질은 아직 검수하지 않았다.
 
 ## 진행 기록 — 로컬 실사용 기록 도구
 
@@ -137,7 +137,7 @@
 | P2-BUNDLE | 관련 문서 묶음 | 다중 문서 coverage 전후 비교 | 문서별 최고 근거 다양화·UI 구현; 실제 multi-document coverage 전후 비교 미완료 |
 | P2-LOCAL | 학습된 로컬 임베딩 | 실모델 설치 크기·메모리·품질·속도·offline 확인 | 선택형 local-files-only sentence-transformers 경로와 모델 SHA/바이트·Python peak·지연 평가 명령 구현; 실제 모델 자산/독립 holdout 측정 미완료 |
 | P2-RERANK | 학습된 reranker | 실모델 품질/추가 지연/비용 비교 | 선택형 local-files-only cross-encoder 경로와 rerank on/off 평가 명령 구현; 실제 모델 자산/독립 holdout 측정 미완료 |
-| P2-FORMAT | PPTX/XLSX/HWP 등 위치 보존 파싱 | 슬라이드/시트·셀/절 인용 fixture | PPTX/XLSX/HWPX 위치 보존 파싱·fixture 구현; 구형 HWP 및 표/이미지 의미 검수 미완료 |
+| P2-FORMAT | PPTX/XLSX/HWP 등 위치 보존 파싱 | 슬라이드/시트·셀/절 인용 fixture | PPTX/XLSX/HWPX 위치 보존과 선택형 HWP v5 `HWP text` 변환/실패/백그라운드 fixture 구현; 실제 HWP 절 구조와 표/이미지 의미 검수 미완료 |
 | P2-OCR | 스캔 문서 OCR | 페이지 위치·오류 표시·품질 검수 | 선택형 local Tesseract 이미지 PDF OCR, `page N · OCR` 위치·페이지별 오류·백그라운드 전달 구현; 실제 OCR 런타임/스캔 문서 품질 검수 미완료 |
 | P2-WATCH | 폴더 자동 갱신 | 저장중 보호·이벤트 합치기·재시도·중지 | 폴링/안정화/재시도/중지·UI/HTTP/CLI 구현 및 테스트; 실제 브라우저 편집→반영 동선 미확인 |
 | P2-REVIEW | 개인 평가 UI | 근거·답변·판정·실험 차이 화면 및 저장 | 답변·표시 근거·사람 판정/메모와 로컬 실험별 판정 집계 구현; 라벨 가이드·실제 검수 데이터 미완료 |

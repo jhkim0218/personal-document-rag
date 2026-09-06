@@ -43,7 +43,7 @@ class SearchResult:
 class RAGIndex:
     """SQLite-backed local index. It never changes the source documents."""
 
-    def __init__(self, database_path: str | Path, embeddings: Embeddings | None = None, source_root: str | Path | None = None, pipeline_version: str = "parser-1", chunking: Chunking | None = None, reranker: LocalReranker | None = None, ocr=None):
+    def __init__(self, database_path: str | Path, embeddings: Embeddings | None = None, source_root: str | Path | None = None, pipeline_version: str = "parser-1", chunking: Chunking | None = None, reranker: LocalReranker | None = None, ocr=None, hwp=None):
         self.database_path = Path(database_path)
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(self.database_path, check_same_thread=False)
@@ -51,6 +51,7 @@ class RAGIndex:
         self.embeddings = embeddings or Embeddings()
         self.reranker = reranker
         self.ocr = ocr
+        self.hwp = hwp
         self.pipeline_version = pipeline_version
         self.chunking = chunking or Chunking()
         self.source_root = str(Path(source_root).resolve()) if source_root is not None else None
@@ -66,7 +67,7 @@ class RAGIndex:
 
     @property
     def processing_version(self) -> str:
-        return f"{self.pipeline_version}:chunk-v2:{self.chunking.strategy}:{self.chunking.max_chars}:{self.chunking.overlap_chars}:ocr:{self.ocr.mode if self.ocr else 'off'}"
+        return f"{self.pipeline_version}:chunk-v2:{self.chunking.strategy}:{self.chunking.max_chars}:{self.chunking.overlap_chars}:ocr:{self.ocr.mode if self.ocr else 'off'}:hwp:{self.hwp.mode if self.hwp else 'off'}"
 
     def close(self) -> None:
         self.connection.close()
@@ -151,7 +152,7 @@ class RAGIndex:
                     if progress:
                         progress(resolved, "skipped", None)
                     continue
-                document = parse_document(path, ocr=self.ocr)
+                document = parse_document(path, ocr=self.ocr, hwp=self.hwp)
                 chunks = to_chunks(document, **asdict(self.chunking))
                 vectors = self.embeddings.embed([text for _, text in chunks])
                 if len(vectors) != len(chunks) or any(not vector for vector in vectors):
@@ -224,7 +225,7 @@ class RAGIndex:
         document_count, last_indexed = self.connection.execute("SELECT COUNT(*), MAX(indexed_at) FROM documents" + scope, params).fetchone()
         chunk_count = self.connection.execute("SELECT COUNT(*) FROM chunks JOIN documents USING(document_id)" + scope, params).fetchone()[0]
         return {"documents": document_count, "chunks": chunk_count, "last_indexed_at": last_indexed, "fts_enabled": self.fts_enabled, "embedding_mode": self.embeddings.mode,
-                "reranker_mode": f"local:cross-encoder:{self.reranker.name}" if self.reranker else "rules", "ocr_mode": self.ocr.mode if self.ocr else "off"}
+                "reranker_mode": f"local:cross-encoder:{self.reranker.name}" if self.reranker else "rules", "ocr_mode": self.ocr.mode if self.ocr else "off", "hwp_mode": self.hwp.mode if self.hwp else "off"}
 
     def source(self, chunk_id: str) -> dict[str, str] | None:
         row = self.connection.execute(

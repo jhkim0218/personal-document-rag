@@ -217,8 +217,8 @@ def make_handler(service: RAGService):
     return Handler
 
 
-def create_server(source_directory: str | Path, database_path: str | Path, port: int = 8000, chunking: Chunking | None = None, mode: str = "auto", local_embedding_model: str | None = None, local_reranker_model: str | None = None, ocr: bool = False, ocr_executable: str = 'tesseract', ocr_language: str = 'eng') -> ThreadingHTTPServer:
-    service = RAGService(source_directory, database_path, chunking=chunking, mode=mode, local_embedding_model=local_embedding_model, local_reranker_model=local_reranker_model, ocr=ocr, ocr_executable=ocr_executable, ocr_language=ocr_language)
+def create_server(source_directory: str | Path, database_path: str | Path, port: int = 8000, chunking: Chunking | None = None, mode: str = "auto", local_embedding_model: str | None = None, local_reranker_model: str | None = None, ocr: bool = False, ocr_executable: str = 'tesseract', ocr_language: str = 'eng', hwp_executable: str | None = None) -> ThreadingHTTPServer:
+    service = RAGService(source_directory, database_path, chunking=chunking, mode=mode, local_embedding_model=local_embedding_model, local_reranker_model=local_reranker_model, ocr=ocr, ocr_executable=ocr_executable, ocr_language=ocr_language, hwp_executable=hwp_executable)
     server = ThreadingHTTPServer(("127.0.0.1", port), make_handler(service))
     server.service = service  # type: ignore[attr-defined]
     return server
@@ -235,6 +235,7 @@ def main() -> None:
     parser.add_argument("--ocr", action="store_true", help="Run local Tesseract on image-only PDF pages")
     parser.add_argument("--ocr-executable", default="tesseract", help="Existing local Tesseract executable")
     parser.add_argument("--ocr-language", default="eng", help="Installed Tesseract language code")
+    parser.add_argument("--hwp-executable", help="Existing local hwp5txt-compatible HWP v5 converter")
     parser.add_argument("--open-browser", action="store_true", help="Open the local page in the default browser")
     parser.add_argument("--watch", action="store_true", help="Automatically index stable changes in active folders")
     parser.add_argument("--chunk-strategy", choices=["structured", "fixed"], default="structured")
@@ -243,7 +244,7 @@ def main() -> None:
     args = parser.parse_args()
     server = create_server(args.data, args.db, args.port, Chunking(args.chunk_strategy, args.chunk_size, args.chunk_overlap), mode=args.mode,
                            local_embedding_model=args.local_embedding_model, local_reranker_model=args.local_reranker_model,
-                           ocr=args.ocr, ocr_executable=args.ocr_executable, ocr_language=args.ocr_language)
+                           ocr=args.ocr, ocr_executable=args.ocr_executable, ocr_language=args.ocr_language, hwp_executable=args.hwp_executable)
     url = f"http://127.0.0.1:{server.server_address[1]}"
     print(f"Open {url} (source: {Path(args.data).resolve()})")
     try:

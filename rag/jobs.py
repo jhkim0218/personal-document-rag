@@ -37,7 +37,7 @@ class IndexJobs:
         with self.lock:
             return json.loads(json.dumps(self.record))
 
-    def start(self, settings, embeddings, pipeline_version, *, mode="changed", strict=True, chunking=None, ocr=None):
+    def start(self, settings, embeddings, pipeline_version, *, mode="changed", strict=True, chunking=None, ocr=None, hwp=None):
         if mode not in {"changed", "full", "retry"} or not isinstance(strict, bool):
             raise ValueError("mode must be changed/full/retry and strict must be boolean")
         with self.lock:
@@ -52,7 +52,7 @@ class IndexJobs:
                            "summary": asdict(IndexSummary())}
             self.cancelled.clear()
             self._save()
-            self.thread = Thread(target=self._run, args=(settings, embeddings, pipeline_version, retry_paths, chunking, ocr), daemon=True)
+            self.thread = Thread(target=self._run, args=(settings, embeddings, pipeline_version, retry_paths, chunking, ocr, hwp), daemon=True)
             self.thread.start()
             return self.status()
 
@@ -80,7 +80,7 @@ class IndexJobs:
                 self.record["failures"].append({"path": path, "error": error})
             self._save()
 
-    def _run(self, settings, embeddings, pipeline_version, retry_paths, chunking, ocr):
+    def _run(self, settings, embeddings, pipeline_version, retry_paths, chunking, ocr, hwp):
         index = None
         summaries = []
         try:
@@ -99,7 +99,7 @@ class IndexJobs:
             with self.lock:
                 self.record["total"] = sum(len(files) for _, files in plan)
                 self._save()
-            index = RAGIndex(self.database, embeddings=embeddings, pipeline_version=pipeline_version, chunking=chunking, ocr=ocr)
+            index = RAGIndex(self.database, embeddings=embeddings, pipeline_version=pipeline_version, chunking=chunking, ocr=ocr, hwp=hwp)
             for source, files in plan:
                 if self.cancelled.is_set():
                     break

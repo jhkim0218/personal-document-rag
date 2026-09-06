@@ -42,6 +42,7 @@ class WebTests(unittest.TestCase):
         self.assertEqual(status["documents"], 1)
         self.assertEqual(status["reranker_mode"], "rules")
         self.assertEqual(status["ocr_mode"], "off")
+        self.assertEqual(status["hwp_mode"], "off")
         results = self.request("/api/search?q=keyword")
         self.assertEqual(results[0]["title"], "guide")
         answer = self.request("/api/ask", "POST", {"question": "What does RRF combine?"})
