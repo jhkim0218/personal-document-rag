@@ -80,11 +80,11 @@ class Answer:
 class Answerer:
     """Evidence-only answer generation with an offline extractive fallback."""
 
-    def __init__(self, api_key: str | None = None, model: str | None = None, enforce_required_evidence: bool = True):
+    def __init__(self, api_key: str | None = None, model: str | None = None, enforce_required_evidence: bool = True, pricing=None):
         self.api_key = api_key if api_key is not None else os.environ.get("OPENAI_API_KEY")
         self.model = model or os.environ.get("RAG_MODEL", "gpt-5.2")
         self.enforce_required_evidence = enforce_required_evidence
-        self.requests = APIRequests()
+        self.requests = APIRequests(pricing=pricing)
 
     def answer(self, question: str, results: list[SearchResult]) -> Answer:
         selections = [(result, select_evidence_sentence(question, result.text)) for result in results]

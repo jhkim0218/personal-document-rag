@@ -1,11 +1,13 @@
 import io
 import json
+import tempfile
 import unittest
 import urllib.error
 import urllib.request
+from pathlib import Path
 from unittest.mock import patch
 
-from rag.api_requests import APIRequests, MAX_RESPONSE_BYTES, retry_delay
+from rag.api_requests import APIRequests, MAX_RESPONSE_BYTES, load_pricing, retry_delay
 from rag.embeddings import Embeddings
 from rag.answer import Answerer
 from tests.test_answer import result
@@ -94,3 +96,31 @@ class APIRequestTests(unittest.TestCase):
                 client.send(self.request())
         self.assertEqual(response.read_size, MAX_RESPONSE_BYTES + 1)
         self.assertEqual(client.snapshot()[-1]['status'], 'failed')
+
+    def test_explicit_dated_rates_calculate_only_observed_token_types(self):
+        pricing = {'effective_date': '2026-09-06', 'models': {'test': {
+            'input_usd_per_million_tokens': 2, 'output_usd_per_million_tokens': 5}}}
+        client = APIRequests(pricing=pricing)
+        body = {'data': [], 'usage': {'input_tokens': 10, 'output_tokens': 2}}
+        with patch('rag.api_requests.urllib.request.urlopen', return_value=response(body)):
+            client.send(self.request())
+        record = client.snapshot()[0]
+        self.assertEqual(record['estimated_cost_usd'], 0.00003)
+        self.assertEqual(record['pricing'], {'effective_date': '2026-09-06', 'per': 'million_tokens',
+                                             'input_usd_per_million_tokens': 2.0, 'output_usd_per_million_tokens': 5.0})
+        unknown = APIRequests(pricing={'effective_date': '2026-09-06', 'models': {}})
+        with patch('rag.api_requests.urllib.request.urlopen', return_value=response(body)):
+            unknown.send(self.request())
+        self.assertIsNone(unknown.snapshot()[0]['estimated_cost_usd'])
+
+    def test_pricing_file_requires_dated_model_rates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary)/'pricing.json'
+            path.write_text(json.dumps({'effective_date': '2026-09-06', 'models': {'test': {'input_usd_per_million_tokens': 1}}}), encoding='utf-8')
+            self.assertEqual(load_pricing(path)['models']['test']['input_usd_per_million_tokens'], 1.0)
+            path.write_text('{"models":{}}', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'effective_date'):
+                load_pricing(path)
+            path.write_text('{"effective_date":"today","models":{}}', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'YYYY-MM-DD'):
+                load_pricing(path)

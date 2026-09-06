@@ -22,10 +22,11 @@ from .relations import Relations
 from .local_models import LocalReranker
 from .ocr import TesseractOCR
 from .hwp import HWPTextConverter
+from .api_requests import load_pricing
 
 
 class RAGService:
-    def __init__(self, source_directory: str | Path, database_path: str | Path, answerer: Answerer | None = None, chunking: Chunking | None = None, mode: str = "auto", local_embedding_model: str | None = None, local_reranker_model: str | None = None, ocr: bool = False, ocr_executable: str = 'tesseract', ocr_language: str = 'eng', hwp_executable: str | None = None):
+    def __init__(self, source_directory: str | Path, database_path: str | Path, answerer: Answerer | None = None, chunking: Chunking | None = None, mode: str = "auto", local_embedding_model: str | None = None, local_reranker_model: str | None = None, ocr: bool = False, ocr_executable: str = 'tesseract', ocr_language: str = 'eng', hwp_executable: str | None = None, pricing_path: str | Path | None = None):
         if mode not in {"auto", "offline", "local"}:
             raise ValueError("mode must be auto or offline")
         if mode in {"offline", "local"} and answerer is not None:
@@ -41,10 +42,11 @@ class RAGService:
         self.settings = SourceSettings.from_dict(data, require_existing=not self.settings_path.exists())
         ocr_engine = TesseractOCR(ocr_executable, ocr_language) if ocr else None
         hwp_converter = HWPTextConverter(hwp_executable) if hwp_executable else None
-        self.index = RAGIndex(database_path, embeddings=Embeddings(api_key="" if mode in {"offline", "local"} else None, local_model_path=local_embedding_model), chunking=chunking,
+        self.pricing = load_pricing(pricing_path)
+        self.index = RAGIndex(database_path, embeddings=Embeddings(api_key="" if mode in {"offline", "local"} else None, local_model_path=local_embedding_model, pricing=self.pricing), chunking=chunking,
                               reranker=LocalReranker(local_reranker_model) if local_reranker_model else None, ocr=ocr_engine, hwp=hwp_converter)
         self.index.path_filter = self.settings.allows
-        self.answerer = answerer or Answerer(api_key="" if mode in {"offline", "local"} else None)
+        self.answerer = answerer or Answerer(api_key="" if mode in {"offline", "local"} else None, pricing=self.pricing)
         # ponytail: serialize readers for one user; indexing owns a separate WAL connection.
         self.lock = RLock()
         self.last_index_result = None
@@ -95,6 +97,7 @@ class RAGService:
                     "watcher": self.watcher.status(),
                     "api_attempts": {"embeddings": self.index.embeddings.requests.snapshot(), "generation": self.answerer.requests.snapshot()},
                     "api_usage": self.usage.status(),
+                    "api_pricing": self.pricing,
                     "generation_mode": f"openai:{self.answerer.model}" if self.answerer.api_key else "local:extractive",
                     "external_transmission": bool(self.index.embeddings.api_key or self.answerer.api_key)}
 

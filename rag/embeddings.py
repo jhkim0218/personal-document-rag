@@ -13,7 +13,7 @@ from .local_models import LocalEncoder
 class Embeddings:
     """One local fallback with an optional OpenAI embedding path; no provider framework."""
 
-    def __init__(self, api_key: str | None = None, model: str | None = None, local_model_path: str | None = None, local_encoder=None):
+    def __init__(self, api_key: str | None = None, model: str | None = None, local_model_path: str | None = None, local_encoder=None, pricing=None):
         self.api_key = api_key if api_key is not None else os.environ.get("OPENAI_API_KEY")
         self.model = model or os.environ.get("RAG_EMBEDDING_MODEL", "text-embedding-3-small")
         if local_model_path and self.api_key:
@@ -22,7 +22,7 @@ class Embeddings:
             raise ValueError("A local encoder requires a local model directory")
         self.local = LocalEncoder(local_model_path, local_encoder) if local_model_path else None
         self.mode = f"local:sentence-transformers:{self.local.name}" if self.local else f"openai:{self.model}" if self.api_key else "local:hash-256"
-        self.requests = APIRequests()
+        self.requests = APIRequests(pricing=pricing)
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         if not texts:

@@ -23,11 +23,14 @@ class UsageTests(unittest.TestCase):
                 def read(self, size=-1): return b'{"usage":{"input_tokens":3,"output_tokens":2}}'
 
             request = urllib.request.Request('https://api.openai.com/v1/responses', data=json.dumps({'model':'test-model','secret':'never-store'}).encode(), method='POST')
+            pricing = {'effective_date': '2026-09-06', 'models': {'test-model': {'input_usd_per_million_tokens': 2, 'output_usd_per_million_tokens': 5}}}
             with patch('rag.api_requests.urllib.request.urlopen', return_value=Response()):
-                APIRequests(journal).send(request)
+                APIRequests(journal, pricing=pricing).send(request)
             record = journal.status()['records'][0]
             self.assertEqual(record['model'], 'test-model')
             self.assertEqual(record['usage'], {'input_tokens': 3, 'output_tokens': 2})
+            self.assertEqual(record['estimated_cost_usd'], 0.000016)
+            self.assertEqual(record['pricing']['effective_date'], '2026-09-06')
             self.assertNotIn('secret', str(record))
             self.assertNotIn('never-store', path.read_text(encoding='utf-8', errors='ignore'))
             journal.close()
