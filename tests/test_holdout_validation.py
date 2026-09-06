@@ -25,3 +25,8 @@ class HoldoutValidationTests(unittest.TestCase):
         self.assertFalse(report['valid'])
         self.assertEqual(report['ai_draft'], 1)
         self.assertTrue(any('overlaps' in error for error in report['errors']))
+
+    def test_empty_holdout_is_not_evidence(self):
+        report = validate([], [])
+        self.assertFalse(report['valid'])
+        self.assertIn('holdout must contain at least one case', report['errors'])

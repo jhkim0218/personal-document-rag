@@ -144,10 +144,10 @@
 | P2-RELATIONS | 프로젝트→결정→문서 관계 | 관계 탐색과 multi-document recall 비교 | 수동 관계 저장·범위 검증·관계 탐색과 AI 개발 fixture의 search/relation coverage 비교 구현; 실제 관계 질의·자동 관계 추출 미완료 |
 | DOCS | 무엇/왜/어떻게/검증/한계 | 구현 기록·README·실행 재현 및 전체 완료 감사 | 진행 |
 
-## 진행 기록 — holdout 라벨 검증
+## 진행 기록 — holdout 라벨 검증·실행
 
-- 무엇/왜: `scripts/validate_holdout.py`가 별도 JSONL의 개발 질문 중복, 고유 ID, answerable 여부, 문서·원문 위치·필수 사실, `human-reviewed`/`ai-draft` 상태를 확인한다. 최종 수치 전 `--require-human-review`로 AI 초안을 차단할 수 있다.
-- 검증: 사람이 검수한 answerable/unanswerable holdout의 통과와, 개발 질문 중복·불완전 근거·AI 초안의 실패를 단위 테스트했다.
+- 무엇/왜: `scripts/validate_holdout.py`가 별도 JSONL의 개발 질문 중복, 고유 ID, answerable 여부, 문서·원문 위치·필수 사실, `human-reviewed`/`ai-draft` 상태와 비어 있지 않음을 확인한다. `scripts/run_eval.py --holdout`은 이 검사를 통과한 사람 검수 holdout만 오프라인 네 검색 설정 평가에 연결하고, 기본 개발 50문항 경로는 유지한다.
+- 검증: 사람이 검수한 answerable/unanswerable holdout의 통과와, 빈 holdout·개발 질문 중복·불완전 근거·AI 초안의 실패를 단위 테스트했다. 작은 비공개 fixture로 `--holdout` 평가가 API 없이 실행되고 결과 보고서에 질문 원문을 쓰지 않는지도 테스트했다.
 - 한계: 이 검사는 사람이 실제 원문을 정확히 판정했는지, 질문이 의미적으로 독립적인지, 실제 업무 품질을 판단하지 않는다. 실제 private holdout과 검수 결과는 여전히 사용자 환경에서 수집해야 한다.
 
 ## 진행 기록 — 선택 기능 사전 점검

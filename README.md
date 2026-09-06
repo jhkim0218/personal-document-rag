@@ -141,6 +141,12 @@ python scripts/benchmark_search.py
 python scripts/validate_holdout.py --development data\eval\questions.jsonl --holdout D:\private\rag-holdout.jsonl --require-human-review
 ```
 
+사람 검수 holdout을 실제로 평가하려면 `--holdout`을 명시하세요. 이 모드는 개발 50문항 제약 대신 중복·라벨·사람 검수 검사를 통과한 비공개 JSONL만 받습니다. 결과에는 질문 원문이 아닌 SHA-256과 집계만 저장되지만, 결과 파일도 비공개 경로에 두고 Git에 올리지 마세요.
+
+```powershell
+python scripts/run_eval.py --data D:\private\documents --questions D:\private\rag-holdout.jsonl --development data\eval\questions.jsonl --holdout --output D:\private\rag-holdout-evaluation.json
+```
+
 처음 실행할 때 `--data`가 기본 폴더가 됩니다. 화면의 **검색 폴더 설정**에서 여러 폴더를 추가하고 활성/비활성, 포함/제외 하위 경로, 확장자를 설정할 수 있습니다. 저장 전 범위 미리보기로 대상 파일을 확인하세요. 설정을 저장하면 검색·문서 수·출처 범위에 즉시 반영되며 새 파일은 “변경 파일 색인” 후 검색됩니다. 설정은 DB 옆 `*.sources.json`에 저장되어 재시작 시 `--data`보다 우선합니다. 별도 설정을 사용하려면 다른 `--db`를 지정하세요.
 
 `.git`, `.local`, 가상환경, 캐시, 임시 Office 파일은 기본 제외합니다. 하위 경로 필터는 glob이 아닌 상대 경로이며 `..`로 루트 밖을 지정할 수 없습니다. 비활성 폴더의 이전 색인은 DB에 남아도 검색/출처/원본 조회에 나오지 않습니다. PC 전체 자동 검색이나 폴더 자동 감시는 아직 없습니다. 변경 없는 파일도 해시 확인을 위해 읽지만 파싱·임베딩은 생략합니다.

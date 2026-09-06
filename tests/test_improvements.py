@@ -116,6 +116,37 @@ class ImprovementTests(unittest.TestCase):
             self.assertIn('document_hit_at_5', variant)
             self.assertNotIn('citation_precision', variant)
 
+    def test_human_reviewed_holdout_runs_offline_without_storing_question_text(self):
+        corpus = self.root / 'corpus'
+        corpus.mkdir()
+        (corpus / 'runbook.md').write_text('Rollback requires approval from the release manager.', encoding='utf-8')
+        development = self.root / 'development.jsonl'
+        development.write_text(json.dumps({'id': 'dev', 'question': 'When is the release?'}) + '\n', encoding='utf-8')
+        holdout = self.root / 'holdout.jsonl'
+        question = 'Who must approve a rollback?'
+        holdout.write_text(json.dumps({'id': 'holdout', 'question': question, 'answerable': True,
+                                      'expected_document': 'runbook.md', 'gold_location': 'heading: rollback',
+                                      'required_facts': ['release manager approval'], 'label_status': 'human-reviewed'}) + '\n', encoding='utf-8')
+        output = self.root / 'holdout-evaluation.json'
+        with patch.dict(os.environ, {'OPENAI_API_KEY': 'must-not-use'}), patch('urllib.request.urlopen', side_effect=AssertionError('Offline network call')), patch('sys.argv', ['run_eval', '--data', str(corpus), '--questions', str(holdout), '--development', str(development), '--holdout', '--output', str(output)]):
+            evaluate_main()
+        report = json.loads(output.read_text(encoding='utf-8'))
+        self.assertEqual(report['run']['dataset_kind'], 'human-reviewed-holdout')
+        self.assertEqual(report['holdout_validation']['human_reviewed'], 1)
+        self.assertNotIn(question, output.read_text(encoding='utf-8'))
+
+    def test_draft_holdout_is_rejected_before_evaluation(self):
+        development = self.root / 'development.jsonl'
+        development.write_text(json.dumps({'id': 'dev', 'question': 'When is the release?'}) + '\n', encoding='utf-8')
+        holdout = self.root / 'holdout.jsonl'
+        holdout.write_text(json.dumps({'id': 'draft', 'question': 'Who approves rollback?', 'answerable': False,
+                                      'label_status': 'ai-draft'}) + '\n', encoding='utf-8')
+        output = self.root / 'should-not-exist.json'
+        with patch('sys.argv', ['run_eval', '--data', str(self.a), '--questions', str(holdout), '--development', str(development), '--holdout', '--output', str(output)]):
+            with self.assertRaisesRegex(SystemExit, 'Every holdout case must be human-reviewed'):
+                evaluate_main()
+        self.assertFalse(output.exists())
+
 
 if __name__ == '__main__':
     unittest.main()

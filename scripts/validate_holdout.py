@@ -19,6 +19,8 @@ def normalized_question(value: object) -> str:
 
 def validate(development: list[dict], holdout: list[dict]) -> dict:
     errors: list[str] = []
+    if not holdout:
+        errors.append('holdout must contain at least one case')
     dev_questions = {normalized_question(item.get('question')) for item in development}
     seen_ids: set[str] = set()
     reviewed = drafts = answerable = unanswerable = 0

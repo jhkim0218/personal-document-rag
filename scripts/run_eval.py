@@ -21,6 +21,7 @@ from rag.answer import Answerer, PROMPT_VERSION
 from rag.index import RAGIndex
 from rag.embeddings import Embeddings
 from rag.local_models import LocalReranker
+from scripts.validate_holdout import validate as validate_holdout
 
 
 def load_questions(path: Path) -> list[dict[str, object]]:
@@ -110,11 +111,23 @@ def main() -> None:
     parser.add_argument("--data", required=True)
     parser.add_argument("--questions", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--holdout", action="store_true", help="Evaluate a private, human-reviewed holdout instead of the 50-question development set")
+    parser.add_argument("--development", type=Path, default=ROOT / "data" / "eval" / "questions.jsonl",
+                        help="Development JSONL used to reject holdout question overlap")
     parser.add_argument("--local-embedding-model", help="Existing local sentence-transformers directory; no model download is attempted")
     parser.add_argument("--local-reranker-model", help="Existing local cross-encoder directory; no model download is attempted")
     args = parser.parse_args()
-    questions = load_questions(Path(args.questions))
-    if len(questions) != 50:
+    questions_path = Path(args.questions)
+    questions = load_questions(questions_path)
+    holdout_validation: dict[str, object] | None = None
+    if args.holdout:
+        holdout_validation = validate_holdout(load_questions(args.development), questions)
+        if holdout_validation["human_reviewed"] != holdout_validation["cases"]:
+            holdout_validation["errors"].append("Every holdout case must be human-reviewed for this run")
+            holdout_validation["valid"] = False
+        if not holdout_validation["valid"]:
+            raise SystemExit(f"Holdout validation failed: {holdout_validation['errors']}")
+    elif len(questions) != 50:
         raise SystemExit(f"Expected 50 questions, found {len(questions)}")
     with tempfile.TemporaryDirectory() as temporary_directory:
         tracemalloc.start()
@@ -140,23 +153,29 @@ def main() -> None:
     corpus_root = Path(args.data).resolve()
     file_hashes = {str(path.relative_to(corpus_root)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(corpus_root.rglob("*")) if path.is_file()}
     report = {
-        "schema_version": 2,
+        "schema_version": 3,
         "run": {"time_utc": datetime.now(timezone.utc).isoformat(), "python": platform.python_version(),
                 "mode": "local-model" if args.local_embedding_model or args.local_reranker_model else "offline", "embedding": embedding_mode,
                 "reranker": reranker_mode, "answer": "extractive", "top_k": 5,
+                "dataset_kind": "human-reviewed-holdout" if args.holdout else "ai-authored-development",
                 "lexical_profile": "enhanced-v1", "search_cache": True,
                 "prompt_version": PROMPT_VERSION,
                 "chunking": asdict(index.chunking), "pipeline_version": index.processing_version,
-                "questions_sha256": hashlib.sha256(Path(args.questions).read_bytes()).hexdigest(),
+                "questions_sha256": hashlib.sha256(questions_path.read_bytes()).hexdigest(),
                 "corpus_files_sha256": file_hashes,
                 "code_sha256": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted((ROOT / "rag").glob("*.py")) + [Path(__file__).resolve()]},
                 "api_calls": 0, "python_peak_bytes": python_peak_bytes,
                 "local_models": {'embedding': model_metadata(args.local_embedding_model), 'reranker': model_metadata(args.local_reranker_model)}},
         "limitations": ["Citation presence and gold-file agreement are proxies, not semantic grounding.",
                         "Semantic citation precision and grounding are unmeasured (null).",
-                        "Unanswerable set contains only three questions; no general abstention claim.",
                         "Offline API cost is zero; local compute and human review costs are not measured.",
-                        "Python allocation peak excludes native accelerator/runtime memory; local model quality needs an independently reviewed holdout."],
+                        "Python allocation peak excludes native accelerator/runtime memory."] + (
+                            ["The report stores no holdout question text, but the chosen local output path remains the user's privacy responsibility.",
+                             "Human-reviewed labels are asserted by input metadata; reviewer identity and semantic judgment are not independently audited.",
+                             "Holdout results are not a workplace outcome or a generalization claim."] if args.holdout else
+                            ["Unanswerable set contains only three questions; no general abstention claim.",
+                             "Local model quality needs an independently reviewed holdout."]),
+        "holdout_validation": holdout_validation,
         "corpus": summary.indexed, "variants": variants,
     }
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
