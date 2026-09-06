@@ -81,6 +81,17 @@ class RuntimeModeTests(unittest.TestCase):
         server.service.close.assert_called_once()
         server.server_close.assert_called_once()
 
+    def test_cli_passes_explicit_local_model_directories(self):
+        server = Mock()
+        server.server_address = ('127.0.0.1', 43210)
+        server.service.status.return_value = {'runtime_mode': 'local', 'embedding_mode': 'local:hash-256',
+                                              'generation_mode': 'local:extractive', 'external_transmission': False}
+        with patch('sys.argv', ['app.py', '--mode', 'local', '--local-reranker-model', 'D:/models/reranker']), patch('app.create_server', return_value=server) as create:
+            app.main()
+        self.assertEqual(create.call_args.kwargs['mode'], 'local')
+        self.assertEqual(create.call_args.kwargs['local_reranker_model'], 'D:/models/reranker')
+        server.service.close.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()

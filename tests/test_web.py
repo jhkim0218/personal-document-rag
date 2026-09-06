@@ -38,7 +38,10 @@ class WebTests(unittest.TestCase):
 
     def test_http_routes_index_search_ask_and_source(self) -> None:
         self.assertEqual(self.request("/api/index", "POST")["indexed"], 1)
-        self.assertEqual(self.request("/api/status")["documents"], 1)
+        status = self.request("/api/status")
+        self.assertEqual(status["documents"], 1)
+        self.assertEqual(status["reranker_mode"], "rules")
+        self.assertEqual(status["ocr_mode"], "off")
         results = self.request("/api/search?q=keyword")
         self.assertEqual(results[0]["title"], "guide")
         answer = self.request("/api/ask", "POST", {"question": "What does RRF combine?"})

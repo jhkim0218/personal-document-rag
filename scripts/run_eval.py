@@ -10,6 +10,7 @@ import re
 import sys
 import tempfile
 import time
+import tracemalloc
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +20,7 @@ if str(ROOT) not in sys.path:
 from rag.answer import Answerer, PROMPT_VERSION
 from rag.index import RAGIndex
 from rag.embeddings import Embeddings
+from rag.local_models import LocalReranker
 
 
 def load_questions(path: Path) -> list[dict[str, object]]:
@@ -87,17 +89,38 @@ def percentile(values: list[float], fraction: float) -> float:
     return round(ordered[low] + (ordered[high] - ordered[low]) * (position - low), 3)
 
 
+def model_metadata(path: str | None) -> dict[str, object] | None:
+    if not path:
+        return None
+    root = Path(path).expanduser().resolve()
+    if not root.is_dir():
+        raise ValueError(f"Local model directory does not exist: {root}")
+    digest = hashlib.sha256()
+    files = [file for file in sorted(root.rglob('*')) if file.is_file()]
+    for file in files:
+        digest.update(str(file.relative_to(root)).replace('\\', '/').encode('utf-8'))
+        with file.open('rb') as source:
+            for block in iter(lambda: source.read(1024 * 1024), b''):
+                digest.update(block)
+    return {'name': root.name, 'files': len(files), 'bytes': sum(file.stat().st_size for file in files), 'sha256': digest.hexdigest()}
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run deterministic local RAG retrieval and abstention evaluation")
+    parser = argparse.ArgumentParser(description="Run offline RAG retrieval and abstention evaluation")
     parser.add_argument("--data", required=True)
     parser.add_argument("--questions", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--local-embedding-model", help="Existing local sentence-transformers directory; no model download is attempted")
+    parser.add_argument("--local-reranker-model", help="Existing local cross-encoder directory; no model download is attempted")
     args = parser.parse_args()
     questions = load_questions(Path(args.questions))
     if len(questions) != 50:
         raise SystemExit(f"Expected 50 questions, found {len(questions)}")
     with tempfile.TemporaryDirectory() as temporary_directory:
-        index = RAGIndex(Path(temporary_directory) / "evaluation.sqlite3", embeddings=Embeddings(api_key=""))
+        tracemalloc.start()
+        embeddings = Embeddings(api_key="", local_model_path=args.local_embedding_model)
+        index = RAGIndex(Path(temporary_directory) / "evaluation.sqlite3", embeddings=embeddings,
+                         reranker=LocalReranker(args.local_reranker_model) if args.local_reranker_model else None)
         summary = index.index_directory(args.data)
         if summary.failed:
             raise SystemExit(f"Sample corpus had parsing failures: {summary.failed}")
@@ -107,6 +130,10 @@ def main() -> None:
             evaluate(index, questions, "hybrid", False),
             evaluate(index, questions, "hybrid", True),
         ]
+        python_peak_bytes = tracemalloc.get_traced_memory()[1]
+        tracemalloc.stop()
+        embedding_mode = index.embeddings.mode
+        reranker_mode = index.status()['reranker_mode']
         index.close()
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -115,18 +142,21 @@ def main() -> None:
     report = {
         "schema_version": 2,
         "run": {"time_utc": datetime.now(timezone.utc).isoformat(), "python": platform.python_version(),
-                "mode": "offline", "embedding": "local:hash-256", "answer": "extractive", "top_k": 5,
+                "mode": "local-model" if args.local_embedding_model or args.local_reranker_model else "offline", "embedding": embedding_mode,
+                "reranker": reranker_mode, "answer": "extractive", "top_k": 5,
                 "lexical_profile": "enhanced-v1", "search_cache": True,
                 "prompt_version": PROMPT_VERSION,
                 "chunking": asdict(index.chunking), "pipeline_version": index.processing_version,
                 "questions_sha256": hashlib.sha256(Path(args.questions).read_bytes()).hexdigest(),
                 "corpus_files_sha256": file_hashes,
                 "code_sha256": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted((ROOT / "rag").glob("*.py")) + [Path(__file__).resolve()]},
-                "api_calls": 0},
+                "api_calls": 0, "python_peak_bytes": python_peak_bytes,
+                "local_models": {'embedding': model_metadata(args.local_embedding_model), 'reranker': model_metadata(args.local_reranker_model)}},
         "limitations": ["Citation presence and gold-file agreement are proxies, not semantic grounding.",
                         "Semantic citation precision and grounding are unmeasured (null).",
                         "Unanswerable set contains only three questions; no general abstention claim.",
-                        "Offline API cost is zero; local compute and human review costs are not measured."],
+                        "Offline API cost is zero; local compute and human review costs are not measured.",
+                        "Python allocation peak excludes native accelerator/runtime memory; local model quality needs an independently reviewed holdout."],
         "corpus": summary.indexed, "variants": variants,
     }
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

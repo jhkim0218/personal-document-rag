@@ -7,20 +7,28 @@ import urllib.request
 
 from .text import hash_embedding
 from .api_requests import APIRequests
+from .local_models import LocalEncoder
 
 
 class Embeddings:
     """One local fallback with an optional OpenAI embedding path; no provider framework."""
 
-    def __init__(self, api_key: str | None = None, model: str | None = None):
+    def __init__(self, api_key: str | None = None, model: str | None = None, local_model_path: str | None = None, local_encoder=None):
         self.api_key = api_key if api_key is not None else os.environ.get("OPENAI_API_KEY")
         self.model = model or os.environ.get("RAG_EMBEDDING_MODEL", "text-embedding-3-small")
-        self.mode = f"openai:{self.model}" if self.api_key else "local:hash-256"
+        if local_model_path and self.api_key:
+            raise ValueError("Choose either an OpenAI embedding key or a local embedding model")
+        if local_encoder is not None and not local_model_path:
+            raise ValueError("A local encoder requires a local model directory")
+        self.local = LocalEncoder(local_model_path, local_encoder) if local_model_path else None
+        self.mode = f"local:sentence-transformers:{self.local.name}" if self.local else f"openai:{self.model}" if self.api_key else "local:hash-256"
         self.requests = APIRequests()
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         if not texts:
             return []
+        if self.local:
+            return self.local.embed(texts)
         if not self.api_key:
             return [hash_embedding(text) for text in texts]
         # Conservative UTF-8 byte limits avoid a tokenizer dependency; never truncate evidence.

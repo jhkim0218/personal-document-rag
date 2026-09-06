@@ -135,10 +135,10 @@
 | FAILURES | 5개 이상 실패 분석·경력서 증거 | 재현 질의/근거/원인/변경/전후 결과 및 한계 | 재현 실패 후보 5개 큐 구현; 원인/변경/전후 결과와 사람 검수 미완료 |
 | P2-HISTORY | 결정 이력 비교 | 날짜·변경 전후·출처·추측 구분 | 원문 명시 변경문·날짜순·출처·null 추측 구분 구현; 다문서 동일 결정 묶음/coverage 미완료 |
 | P2-BUNDLE | 관련 문서 묶음 | 다중 문서 coverage 전후 비교 | 문서별 최고 근거 다양화·UI 구현; 실제 multi-document coverage 전후 비교 미완료 |
-| P2-LOCAL | 학습된 로컬 임베딩 | 실모델 설치 크기·메모리·품질·속도·offline 확인 | 미완료 |
-| P2-RERANK | 학습된 reranker | 실모델 품질/추가 지연/비용 비교 | 미완료 |
+| P2-LOCAL | 학습된 로컬 임베딩 | 실모델 설치 크기·메모리·품질·속도·offline 확인 | 선택형 local-files-only sentence-transformers 경로와 모델 SHA/바이트·Python peak·지연 평가 명령 구현; 실제 모델 자산/독립 holdout 측정 미완료 |
+| P2-RERANK | 학습된 reranker | 실모델 품질/추가 지연/비용 비교 | 선택형 local-files-only cross-encoder 경로와 rerank on/off 평가 명령 구현; 실제 모델 자산/독립 holdout 측정 미완료 |
 | P2-FORMAT | PPTX/XLSX/HWP 등 위치 보존 파싱 | 슬라이드/시트·셀/절 인용 fixture | PPTX/XLSX/HWPX 위치 보존 파싱·fixture 구현; 구형 HWP 및 표/이미지 의미 검수 미완료 |
-| P2-OCR | 스캔 문서 OCR | 페이지 위치·오류 표시·품질 검수 | 미완료 |
+| P2-OCR | 스캔 문서 OCR | 페이지 위치·오류 표시·품질 검수 | 선택형 local Tesseract 이미지 PDF OCR, `page N · OCR` 위치·페이지별 오류·백그라운드 전달 구현; 실제 OCR 런타임/스캔 문서 품질 검수 미완료 |
 | P2-WATCH | 폴더 자동 갱신 | 저장중 보호·이벤트 합치기·재시도·중지 | 폴링/안정화/재시도/중지·UI/HTTP/CLI 구현 및 테스트; 실제 브라우저 편집→반영 동선 미확인 |
 | P2-REVIEW | 개인 평가 UI | 근거·답변·판정·실험 차이 화면 및 저장 | 답변·표시 근거·사람 판정/메모와 로컬 실험별 판정 집계 구현; 라벨 가이드·실제 검수 데이터 미완료 |
 | P2-RELATIONS | 프로젝트→결정→문서 관계 | 관계 탐색과 multi-document recall 비교 | 수동 관계 저장·범위 검증·관계 탐색과 AI 개발 fixture의 search/relation coverage 비교 구현; 실제 관계 질의·자동 관계 추출 미완료 |

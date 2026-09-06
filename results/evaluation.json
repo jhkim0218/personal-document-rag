@@ -1,10 +1,11 @@
 {
   "schema_version": 2,
   "run": {
-    "time_utc": "2026-09-05T12:32:45.110239+00:00",
+    "time_utc": "2026-09-06T03:24:42.611311+00:00",
     "python": "3.13.9",
     "mode": "offline",
     "embedding": "local:hash-256",
+    "reranker": "rules",
     "answer": "extractive",
     "top_k": 5,
     "lexical_profile": "enhanced-v1",
@@ -41,31 +42,38 @@
     },
     "code_sha256": {
       "rag\\__init__.py": "bfd8f2f58544a30231cbc2156dba49130b49dac80711d6cda74107be8028356b",
-      "rag\\answer.py": "60ca55c99d6471659959051579a43a821c631f10c9fa11f383da8a1433925d82",
+      "rag\\answer.py": "aee4ea97280f141d376eccb761b937efd4df02fde4c1e81e27e99fcdd9f0ba71",
       "rag\\api_requests.py": "304a5cfa765d5f0591bf935f989ceb81e7f1a4125dae25fa8492c57d8b366717",
       "rag\\bundles.py": "6020959aa7ca3f58ed029a38a62403360a1a24bcbc85d5cdc8351f3d7075830c",
       "rag\\documents.py": "af66033ffc3618c7182efa389e00948bdcec9c8495509eee0ed5bd1472632e4c",
-      "rag\\embeddings.py": "44c6d9e1840135be10be4e26939cf55f4c133d8ed28e2b02c31a289da289e311",
+      "rag\\embeddings.py": "dbef2ecc8887855fcdcd0604dd8ad50fec3a2649e3355b0d2ee39ae03254cd34",
       "rag\\history.py": "bb5937c764a72246ae502082b90f9690f98717f03b5b2dd8b5ef268720c045e5",
-      "rag\\index.py": "f3457747c6802a3cbf1b34470973b5411d4525d0f1667287b7791af764e4dd86",
+      "rag\\index.py": "1e02d1d58ac10100afe0cf61f431699368b45ddb78573ede7626aaba62d0e1b9",
       "rag\\jobs.py": "fe2e7760f2c05f8505da02d4a757eb67c15182308d627cd98167014207667158",
+      "rag\\local_models.py": "eb058c5fdfd161eb1a250cdff5ad804b64fbf6cfb925bf53a550434bbb9a119c",
       "rag\\relations.py": "2fe944ba5958c3fbfd1465550743168b37fa0fc9941b538b4618625ed957778d",
-      "rag\\reviews.py": "ea6e242a1267eaee5a145031611d0fcd9aa1c422998e5a99eff3ab8192cecda5",
-      "rag\\service.py": "f721843ec93e324eb7440131691cb881e72cf088e1f9cd08cee092912e9e2eab",
+      "rag\\reviews.py": "a0ee873fec826415e92955dddbbd51d13b1656977abce6c65708318ec7af4e81",
+      "rag\\service.py": "c00d5a12f0af36f3607d787e45d32ff5ba9f98b3cabb50b0f07e6b970d4e48bf",
       "rag\\sources.py": "cc41769110d5460db0242802ccdae689ba0eeb6590bc9e92ceeffb01bf4e7c0c",
       "rag\\study.py": "fa4a7340145d2992012ea40c37d23d052def3e097d0a49af5b5799aff534bbc0",
       "rag\\text.py": "4cf3b6b9ce09c7c4d9b8b2f4642fe64ba004d01f34d0b427b714a3a7665e59fb",
       "rag\\usage.py": "9e3c3f60f3ed902847a0c43ac8f956a9c82577cac96ba463c7dcf549a27385b7",
       "rag\\watcher.py": "a1a33f50de5dd6ab358b82d45841557f10860986658106a9521d6447e4a1e4b5",
-      "scripts\\run_eval.py": "ebfe342c1ab7a44b5fd7b1e4efdeca5beddf3c6bf513577a25ea2305e9e85961"
+      "scripts\\run_eval.py": "bd89c3b638fd6b4c34be604d76ef13af1f8736fb6d9574badacb22f371607b5f"
     },
-    "api_calls": 0
+    "api_calls": 0,
+    "python_peak_bytes": 1127867,
+    "local_models": {
+      "embedding": null,
+      "reranker": null
+    }
   },
   "limitations": [
     "Citation presence and gold-file agreement are proxies, not semantic grounding.",
     "Semantic citation precision and grounding are unmeasured (null).",
     "Unanswerable set contains only three questions; no general abstention claim.",
-    "Offline API cost is zero; local compute and human review costs are not measured."
+    "Offline API cost is zero; local compute and human review costs are not measured.",
+    "Python allocation peak excludes native accelerator/runtime memory; local model quality needs an independently reviewed holdout."
   ],
   "corpus": 20,
   "variants": [
@@ -81,12 +89,12 @@
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
       "appropriate_abstention": 1.0,
-      "p50_search_latency_ms": 1.041,
-      "p95_search_latency_ms": 1.147,
-      "p50_answer_latency_ms": 0.694,
-      "p95_answer_latency_ms": 0.981,
-      "p50_total_latency_ms": 1.736,
-      "p95_total_latency_ms": 2.115,
+      "p50_search_latency_ms": 4.609,
+      "p95_search_latency_ms": 6.592,
+      "p50_answer_latency_ms": 2.567,
+      "p95_answer_latency_ms": 4.157,
+      "p50_total_latency_ms": 7.3,
+      "p95_total_latency_ms": 10.305,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -403,12 +411,12 @@
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
       "appropriate_abstention": 0.3333333333333333,
-      "p50_search_latency_ms": 0.348,
-      "p95_search_latency_ms": 0.484,
-      "p50_answer_latency_ms": 0.7,
-      "p95_answer_latency_ms": 1.016,
-      "p50_total_latency_ms": 1.061,
-      "p95_total_latency_ms": 1.474,
+      "p50_search_latency_ms": 1.693,
+      "p95_search_latency_ms": 2.624,
+      "p50_answer_latency_ms": 2.554,
+      "p95_answer_latency_ms": 3.296,
+      "p50_total_latency_ms": 4.336,
+      "p95_total_latency_ms": 5.491,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -725,12 +733,12 @@
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
       "appropriate_abstention": 0.3333333333333333,
-      "p50_search_latency_ms": 1.393,
-      "p95_search_latency_ms": 1.648,
-      "p50_answer_latency_ms": 0.732,
-      "p95_answer_latency_ms": 0.923,
-      "p50_total_latency_ms": 2.13,
-      "p95_total_latency_ms": 2.634,
+      "p50_search_latency_ms": 6.312,
+      "p95_search_latency_ms": 7.845,
+      "p50_answer_latency_ms": 2.578,
+      "p95_answer_latency_ms": 3.583,
+      "p50_total_latency_ms": 8.833,
+      "p95_total_latency_ms": 10.433,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -1047,12 +1055,12 @@
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
       "appropriate_abstention": 0.3333333333333333,
-      "p50_search_latency_ms": 1.417,
-      "p95_search_latency_ms": 1.799,
-      "p50_answer_latency_ms": 0.736,
-      "p95_answer_latency_ms": 1.092,
-      "p50_total_latency_ms": 2.165,
-      "p95_total_latency_ms": 2.739,
+      "p50_search_latency_ms": 6.344,
+      "p95_search_latency_ms": 8.147,
+      "p50_answer_latency_ms": 2.602,
+      "p95_answer_latency_ms": 3.759,
+      "p50_total_latency_ms": 8.9,
+      "p95_total_latency_ms": 11.234,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {

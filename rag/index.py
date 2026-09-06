@@ -12,6 +12,7 @@ from collections.abc import Callable
 
 from .documents import SUPPORTED_EXTENSIONS, Chunking, content_hash, parse_document, to_chunks
 from .embeddings import Embeddings
+from .local_models import LocalReranker
 from .text import BM25, cosine_similarity, keyword_score, token_overlap, retrieval_tokens
 
 
@@ -42,12 +43,14 @@ class SearchResult:
 class RAGIndex:
     """SQLite-backed local index. It never changes the source documents."""
 
-    def __init__(self, database_path: str | Path, embeddings: Embeddings | None = None, source_root: str | Path | None = None, pipeline_version: str = "parser-1", chunking: Chunking | None = None):
+    def __init__(self, database_path: str | Path, embeddings: Embeddings | None = None, source_root: str | Path | None = None, pipeline_version: str = "parser-1", chunking: Chunking | None = None, reranker: LocalReranker | None = None, ocr=None):
         self.database_path = Path(database_path)
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(self.database_path, check_same_thread=False)
         self.connection.row_factory = sqlite3.Row
         self.embeddings = embeddings or Embeddings()
+        self.reranker = reranker
+        self.ocr = ocr
         self.pipeline_version = pipeline_version
         self.chunking = chunking or Chunking()
         self.source_root = str(Path(source_root).resolve()) if source_root is not None else None
@@ -63,7 +66,7 @@ class RAGIndex:
 
     @property
     def processing_version(self) -> str:
-        return f"{self.pipeline_version}:chunk-v2:{self.chunking.strategy}:{self.chunking.max_chars}:{self.chunking.overlap_chars}"
+        return f"{self.pipeline_version}:chunk-v2:{self.chunking.strategy}:{self.chunking.max_chars}:{self.chunking.overlap_chars}:ocr:{self.ocr.mode if self.ocr else 'off'}"
 
     def close(self) -> None:
         self.connection.close()
@@ -148,7 +151,7 @@ class RAGIndex:
                     if progress:
                         progress(resolved, "skipped", None)
                     continue
-                document = parse_document(path)
+                document = parse_document(path, ocr=self.ocr)
                 chunks = to_chunks(document, **asdict(self.chunking))
                 vectors = self.embeddings.embed([text for _, text in chunks])
                 if len(vectors) != len(chunks) or any(not vector for vector in vectors):
@@ -220,7 +223,8 @@ class RAGIndex:
         params = (self.source_root, self.source_root)
         document_count, last_indexed = self.connection.execute("SELECT COUNT(*), MAX(indexed_at) FROM documents" + scope, params).fetchone()
         chunk_count = self.connection.execute("SELECT COUNT(*) FROM chunks JOIN documents USING(document_id)" + scope, params).fetchone()[0]
-        return {"documents": document_count, "chunks": chunk_count, "last_indexed_at": last_indexed, "fts_enabled": self.fts_enabled, "embedding_mode": self.embeddings.mode}
+        return {"documents": document_count, "chunks": chunk_count, "last_indexed_at": last_indexed, "fts_enabled": self.fts_enabled, "embedding_mode": self.embeddings.mode,
+                "reranker_mode": f"local:cross-encoder:{self.reranker.name}" if self.reranker else "rules", "ocr_mode": self.ocr.mode if self.ocr else "off"}
 
     def source(self, chunk_id: str) -> dict[str, str] | None:
         row = self.connection.execute(
@@ -278,12 +282,15 @@ class RAGIndex:
                 )
                 item["score"] = float(item["score"]) + 1 / (60 + rank)
 
+        local_scores = self.reranker.scores(query, [item["row"]["text"] for item in combined.values()]) if rerank and self.reranker else []
         results = []
-        for item in combined.values():
+        for position, item in enumerate(combined.values()):
             row = item["row"]
             overlap = token_overlap(query, row["text"])
             score = float(item["score"])
-            if rerank:
+            if rerank and self.reranker:
+                score = local_scores[position]
+            elif rerank:
                 score += overlap * 0.08 + (0.03 if query.lower() in row["text"].lower() else 0.0)
             results.append(
                 SearchResult(

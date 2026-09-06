@@ -48,12 +48,12 @@ def content_hash(path: Path) -> str:
     return digest.hexdigest()
 
 
-def parse_document(path: Path) -> ParsedDocument:
+def parse_document(path: Path, ocr=None) -> ParsedDocument:
     extension = path.suffix.lower()
     if extension not in SUPPORTED_EXTENSIONS:
         raise ValueError(f"Unsupported document type: {path.suffix}")
     if extension == ".pdf":
-        sections = _parse_pdf(path)
+        sections = _parse_pdf(path, ocr=ocr)
     elif extension == ".docx":
         sections = _parse_docx(path)
     elif extension == ".pptx":
@@ -198,7 +198,7 @@ def _parse_hwpx(path: Path) -> list[ParsedSection]:
     return sections
 
 
-def _parse_pdf(path: Path) -> list[ParsedSection]:
+def _parse_pdf(path: Path, ocr=None) -> list[ParsedSection]:
     try:
         from pypdf import PdfReader
         from pypdf.errors import PyPdfError
@@ -206,6 +206,15 @@ def _parse_pdf(path: Path) -> list[ParsedSection]:
         raise RuntimeError("PDF support requires `pip install -r requirements.txt`") from error
     try:
         reader = PdfReader(str(path))
-        return [ParsedSection(f"page {number}", page.extract_text() or "") for number, page in enumerate(reader.pages, start=1)]
+        sections = []
+        for number, page in enumerate(reader.pages, start=1):
+            text = page.extract_text() or ""
+            if text.strip():
+                sections.append(ParsedSection(f"page {number}", text))
+            elif ocr:
+                sections.append(ParsedSection(f"page {number} · OCR", ocr.page_text(page, number)))
+            else:
+                sections.append(ParsedSection(f"page {number}", text))
+        return sections
     except PyPdfError as error:
         raise ValueError(f"PDF parsing failed: {error}") from error

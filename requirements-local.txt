@@ -1,0 +1,2 @@
+# Optional, only for --mode local with a model directory already present on this PC.
+sentence-transformers>=3.0

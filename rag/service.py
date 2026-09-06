@@ -19,22 +19,30 @@ from .bundles import related_bundle
 from .reviews import Reviews
 from .usage import APIUsageJournal
 from .relations import Relations
+from .local_models import LocalReranker
+from .ocr import TesseractOCR
 
 
 class RAGService:
-    def __init__(self, source_directory: str | Path, database_path: str | Path, answerer: Answerer | None = None, chunking: Chunking | None = None, mode: str = "auto"):
-        if mode not in {"auto", "offline"}:
+    def __init__(self, source_directory: str | Path, database_path: str | Path, answerer: Answerer | None = None, chunking: Chunking | None = None, mode: str = "auto", local_embedding_model: str | None = None, local_reranker_model: str | None = None, ocr: bool = False, ocr_executable: str = 'tesseract', ocr_language: str = 'eng'):
+        if mode not in {"auto", "offline", "local"}:
             raise ValueError("mode must be auto or offline")
-        if mode == "offline" and answerer is not None:
-            raise ValueError("Offline mode requires the built-in local answerer")
+        if mode in {"offline", "local"} and answerer is not None:
+            raise ValueError("Offline and local modes require the built-in local answerer")
+        if mode == "local" and not (local_embedding_model or local_reranker_model):
+            raise ValueError("Local mode requires a local embedding or reranker model directory")
+        if mode != "local" and (local_embedding_model or local_reranker_model):
+            raise ValueError("Local model directories require --mode local")
         self.mode = mode
         self.source_directory = Path(source_directory).resolve()
         self.settings_path = Path(database_path).with_suffix(".sources.json")
         data = json.loads(self.settings_path.read_text(encoding="utf-8")) if self.settings_path.exists() else {"sources": [{"path": str(self.source_directory)}]}
         self.settings = SourceSettings.from_dict(data, require_existing=not self.settings_path.exists())
-        self.index = RAGIndex(database_path, embeddings=Embeddings(api_key="" if mode == "offline" else None), chunking=chunking)
+        ocr_engine = TesseractOCR(ocr_executable, ocr_language) if ocr else None
+        self.index = RAGIndex(database_path, embeddings=Embeddings(api_key="" if mode in {"offline", "local"} else None, local_model_path=local_embedding_model), chunking=chunking,
+                              reranker=LocalReranker(local_reranker_model) if local_reranker_model else None, ocr=ocr_engine)
         self.index.path_filter = self.settings.allows
-        self.answerer = answerer or Answerer(api_key="" if mode == "offline" else None)
+        self.answerer = answerer or Answerer(api_key="" if mode in {"offline", "local"} else None)
         # ponytail: serialize readers for one user; indexing owns a separate WAL connection.
         self.lock = RLock()
         self.last_index_result = None
@@ -74,7 +82,7 @@ class RAGService:
         if not self.lock.acquire(blocking=False):
             raise RuntimeError("Another request is using the index. Please retry shortly.")
         try:
-            return self.jobs.start(self.settings, self.index.embeddings, self.index.pipeline_version, mode=mode, strict=strict, chunking=self.index.chunking)
+            return self.jobs.start(self.settings, self.index.embeddings, self.index.pipeline_version, mode=mode, strict=strict, chunking=self.index.chunking, ocr=self.index.ocr)
         finally:
             self.lock.release()
 

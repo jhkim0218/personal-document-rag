@@ -45,6 +45,24 @@ python app.py --data D:\허용된\문서폴더
 
 API 키가 있으면 색인 시 OpenAI embeddings를 사용하고, 답변 시 Responses API를 사용합니다. 키가 없을 때도 색인·검색·인용·답변 보류는 동작합니다. 이 경우에는 로컬 hash embedding과 추출형 근거 요약을 사용하므로 의미 검색과 종합 답변 품질은 API 기반 모드보다 낮을 수 있습니다. 키를 새로 설정하거나 embedding 모델을 바꾼 뒤에는 “변경 파일 색인”을 한 번 실행해 해당 모드로 다시 색인합니다.
 
+이미 PC에 내려받은 sentence-transformers 임베딩 모델 또는 cross-encoder reranker가 있다면, `requirements-local.txt`를 설치한 뒤 아래처럼 **local** 모드로 실행할 수 있습니다. 모델 이름을 입력해 인터넷에서 받는 경로는 지원하지 않으며, 지정한 디렉터리가 없거나 런타임이 없으면 시작/색인 시 명확히 실패합니다.
+
+```powershell
+pip install -r requirements-local.txt
+python app.py --mode local --local-embedding-model D:\models\embedding-model
+# reranker만 쓰면 hash embedding + 로컬 cross-encoder를 사용합니다.
+python app.py --mode local --local-reranker-model D:\models\reranker-model
+python scripts/run_eval.py --data data/sample --questions data/eval/questions.jsonl --local-embedding-model D:\models\embedding-model --output results\local-model-evaluation.json
+```
+
+로컬 모델 평가는 모델 파일 수·바이트·SHA-256, Python 할당 peak, 지연시간과 검색 지표를 기록합니다. accelerator/native 메모리와 사람 검토 비용은 측정하지 않으며, 합성 개발 세트 점수는 실제 업무 품질이나 독립 holdout 성능이 아닙니다.
+
+스캔된 PDF가 실제 검색 누락 원인일 때만 로컬 Tesseract를 설치하고 `--ocr`을 사용하세요. 텍스트가 이미 추출되는 PDF에는 실행하지 않으며, 이미지 전용 페이지는 `page N · OCR` 위치로 저장합니다. Tesseract 또는 지정 언어 팩이 없거나 OCR이 실패하면 해당 파일을 조용히 비워 색인하지 않고 오류·재시도 목록에 남깁니다.
+
+```powershell
+python app.py --mode offline --ocr --ocr-executable C:\Program Files\Tesseract-OCR\tesseract.exe --ocr-language kor+eng
+```
+
 외부 API 요청은 최대 3회, 전체 45초 예산 안에서만 재시도하며 응답 본문은 2MB를 넘으면 거절합니다. 생성 답변이 12,000자를 넘으면 같은 근거의 추출형 답변으로 전환합니다. 사용 기록에는 모델·엔드포인트·시도·상태·지연·토큰 사용량만 저장하며 문서/질문/응답 본문이나 키는 저장하지 않습니다.
 
 입력 오류는 400, 동시에 실행할 수 없는 작업은 409, 예상하지 못한 서버 오류는 안전한 `server_error` JSON(500)으로 구분해 화면에 표시합니다. 내부 문서 내용이나 예외 세부 정보는 오류 응답으로 보내지 않습니다.
