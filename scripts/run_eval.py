@@ -4,6 +4,7 @@ import argparse
 import json
 import hashlib
 import platform
+from dataclasses import asdict
 from datetime import datetime, timezone
 import re
 import sys
@@ -15,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from rag.answer import Answerer
+from rag.answer import Answerer, PROMPT_VERSION
 from rag.index import RAGIndex
 from rag.embeddings import Embeddings
 
@@ -115,7 +116,9 @@ def main() -> None:
         "schema_version": 2,
         "run": {"time_utc": datetime.now(timezone.utc).isoformat(), "python": platform.python_version(),
                 "mode": "offline", "embedding": "local:hash-256", "answer": "extractive", "top_k": 5,
-                "chunking": {"max_chars": 900, "overlap_chars": 160, "structure": True},
+                "lexical_profile": "enhanced-v1", "search_cache": True,
+                "prompt_version": PROMPT_VERSION,
+                "chunking": asdict(index.chunking), "pipeline_version": index.processing_version,
                 "questions_sha256": hashlib.sha256(Path(args.questions).read_bytes()).hexdigest(),
                 "corpus_files_sha256": file_hashes,
                 "code_sha256": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted((ROOT / "rag").glob("*.py")) + [Path(__file__).resolve()]},

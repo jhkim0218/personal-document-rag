@@ -14,3 +14,10 @@ venv/
 GATES.md
 IMPROVEMENT_GATES.md
 .unlazy/
+*.sources.json
+*.sources.json.tmp
+*.relations.json
+*.relations.json.tmp
+ROADMAP_GATES.md
+*.jobs.json
+*.jobs.json.tmp

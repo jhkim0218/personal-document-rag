@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "time_utc": "2026-09-06T03:13:25.205706+00:00",
+  "evaluation_sha256": "fdcc35cfe5949a9c9abfbec3ed144f398916ea4d3a70906f0afe8936eac48370",
+  "questions_sha256": "a9f2ccb4f6241b3c93bf042f73a9e51bb3c24cd593df093958428f3fd27b051a",
+  "selected_failure_count": 5,
+  "failures": [
+    {
+      "id": "q03",
+      "question": "검색 결과에는 어떤 원문 위치 정보가 포함되는가?",
+      "answerable": true,
+      "expected_document": "01_architecture.md",
+      "answer_status": "fallback",
+      "top_result": "16_source_workflow.md",
+      "configuration": {
+        "mode": "vector",
+        "rerank": false
+      },
+      "observed_failure": "retrieval_or_abstention_failure",
+      "root_cause": null,
+      "change_applied": null,
+      "before_after_result": null,
+      "review_state": "needs_human_investigation"
+    },
+    {
+      "id": "q10",
+      "question": "평가 질문은 몇 개인가?",
+      "answerable": true,
+      "expected_document": "04_eval_plan.md",
+      "answer_status": "fallback",
+      "top_result": "02_hybrid_retrieval.md",
+      "configuration": {
+        "mode": "vector",
+        "rerank": false
+      },
+      "observed_failure": "retrieval_or_abstention_failure",
+      "root_cause": null,
+      "change_applied": null,
+      "before_after_result": null,
+      "review_state": "needs_human_investigation"
+    },
+    {
+      "id": "q12",
+      "question": "검색 품질 평가의 핵심 지표를 알려줘",
+      "answerable": true,
+      "expected_document": "04_eval_plan.md",
+      "answer_status": "fallback",
+      "top_result": "12_latency_budget.md",
+      "configuration": {
+        "mode": "vector",
+        "rerank": false
+      },
+      "observed_failure": "retrieval_or_abstention_failure",
+      "root_cause": null,
+      "change_applied": null,
+      "before_after_result": null,
+      "review_state": "needs_human_investigation"
+    },
+    {
+      "id": "q16",
+      "question": "근거가 없는 질문에는 시스템이 어떻게 답하는가?",
+      "answerable": true,
+      "expected_document": "06_abstention.md",
+      "answer_status": "fallback",
+      "top_result": "15_failure_analysis.md",
+      "configuration": {
+        "mode": "vector",
+        "rerank": false
+      },
+      "observed_failure": "retrieval_or_abstention_failure",
+      "root_cause": null,
+      "change_applied": null,
+      "before_after_result": null,
+      "review_state": "needs_human_investigation"
+    },
+    {
+      "id": "q18",
+      "question": "답변 보류와 그럴듯한 답변 중 무엇을 우선하는가?",
+      "answerable": true,
+      "expected_document": "06_abstention.md",
+      "answer_status": "fallback",
+      "top_result": "15_failure_analysis.md",
+      "configuration": {
+        "mode": "vector",
+        "rerank": false
+      },
+      "observed_failure": "retrieval_or_abstention_failure",
+      "root_cause": null,
+      "change_applied": null,
+      "before_after_result": null,
+      "review_state": "needs_human_investigation"
+    }
+  ],
+  "limitations": [
+    "Cases are selected from AI-authored development evaluation, not a human-reviewed holdout.",
+    "root_cause, change_applied, and before_after_result remain null until a human investigates each case.",
+    "This queue does not prove a quality improvement or workplace outcome."
+  ]
+}

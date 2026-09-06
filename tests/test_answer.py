@@ -45,7 +45,7 @@ class AnswerTests(unittest.TestCase):
             def __exit__(self, *args):
                 return False
 
-            def read(self):
+            def read(self, size=-1):
                 return json.dumps({"output": [{"type": "message", "content": [{"type": "output_text", "text": "The launch is Friday. [1]"}]}]}).encode()
 
         with patch("rag.answer.urllib.request.urlopen", return_value=Response()) as mocked:
@@ -65,7 +65,7 @@ class AnswerTests(unittest.TestCase):
             def __exit__(self, *args):
                 return False
 
-            def read(self):
+            def read(self, size=-1):
                 return json.dumps({"data": [{"index": 1, "embedding": [0.0, 1.0]}, {"index": 0, "embedding": [1.0, 0.0]}]}).encode()
 
         with patch("rag.embeddings.urllib.request.urlopen", return_value=Response()) as mocked:

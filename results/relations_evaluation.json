@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "time_utc": "2026-09-06T03:13:24.892488+00:00",
+  "mode": "offline",
+  "embedding": "local:hash-256",
+  "top_k": 5,
+  "api_usage": {
+    "requests": 0,
+    "tokens": 0
+  },
+  "api_cost_usd": 0,
+  "local_compute_cost_usd": null,
+  "fixture_sha256": "8125629f82b786b7d2c18684ceacc191951481815768014b65a13d8c76218078",
+  "provenance": "AI-authored synthetic development data; relation maps are explicit test configuration, not inferred links",
+  "metrics": {
+    "search_document_coverage": 0.6666666666666666,
+    "explicit_relation_document_coverage": 1.0
+  },
+  "cases": [
+    {
+      "id": "launch-approval-package",
+      "gold_documents": [
+        "minutes.md",
+        "spec.md",
+        "runbook.md"
+      ],
+      "search_documents": [
+        "minutes.md",
+        "notes-4.md",
+        "runbook.md",
+        "notes-2.md",
+        "notes-1.md"
+      ],
+      "relation_documents": [
+        "minutes.md",
+        "spec.md",
+        "runbook.md"
+      ],
+      "search_coverage": 0.6666666666666666,
+      "relation_coverage": 1.0,
+      "relation_unavailable_documents": 0
+    }
+  ],
+  "limitations": [
+    "Relations are explicit fixture configuration, not extracted entities or semantic links.",
+    "This is AI-authored development data, not a human-reviewed holdout or workplace result.",
+    "Coverage only tests the listed documents, not whether they contain sufficient evidence."
+  ]
+}

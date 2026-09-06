@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "time_utc": "2026-09-06T03:13:25.110966+00:00",
+  "mode": "offline",
+  "embedding": "local:hash-256",
+  "generation": "local:extractive",
+  "api_usage": {
+    "requests": 0,
+    "tokens": 0
+  },
+  "api_cost_usd": 0,
+  "local_compute_cost_usd": null,
+  "fixture_sha256": "9efca28fd027b0c02fbfb361cf04479dd27589d62350a6bb2359814082474b87",
+  "provenance": "AI-authored synthetic development data; not human-reviewed semantic evaluation",
+  "metrics": {
+    "required_cases": 2,
+    "required_literal_partial_rate": 1.0,
+    "permissive_literal_partial_rate": 0.0
+  },
+  "cases": [
+    {
+      "id": "missing-reason",
+      "documents": [
+        "change.md"
+      ],
+      "requires_partial": true,
+      "statuses": {
+        "permissive_literal": "changed",
+        "required_literal_partial": "partial"
+      }
+    },
+    {
+      "id": "missing-p95",
+      "documents": [
+        "latency.md"
+      ],
+      "requires_partial": true,
+      "statuses": {
+        "permissive_literal": "fallback",
+        "required_literal_partial": "partial"
+      }
+    },
+    {
+      "id": "complete-change",
+      "documents": [
+        "complete.md"
+      ],
+      "requires_partial": false,
+      "statuses": {
+        "permissive_literal": "changed",
+        "required_literal_partial": "changed"
+      }
+    }
+  ],
+  "limitations": [
+    "Only explicit before/after, reason, p50, and p95 literal requirements are covered.",
+    "Each policy case uses an explicitly scoped fixture document set, so this isolates answer policy rather than measuring retrieval quality.",
+    "This does not measure semantic entailment, human claim review, or generated-answer correctness.",
+    "Fixture labels are AI-authored development data, not a holdout or workplace outcome."
+  ]
+}

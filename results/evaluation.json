@@ -1,17 +1,21 @@
 {
   "schema_version": 2,
   "run": {
-    "time_utc": "2026-09-04T23:57:45.068110+00:00",
+    "time_utc": "2026-09-05T12:32:45.110239+00:00",
     "python": "3.13.9",
     "mode": "offline",
     "embedding": "local:hash-256",
     "answer": "extractive",
     "top_k": 5,
+    "lexical_profile": "enhanced-v1",
+    "search_cache": true,
+    "prompt_version": "evidence-2-full-context",
     "chunking": {
+      "strategy": "structured",
       "max_chars": 900,
-      "overlap_chars": 160,
-      "structure": true
+      "overlap_chars": 160
     },
+    "pipeline_version": "parser-1:chunk-v2:structured:900:160",
     "questions_sha256": "a9f2ccb4f6241b3c93bf042f73a9e51bb3c24cd593df093958428f3fd27b051a",
     "corpus_files_sha256": {
       "01_architecture.md": "5fb0c97dd9bf4d5ee37f22948ad77f5971c8dda6de50d0b3cc3c5e2a81e29ecb",
@@ -37,13 +41,23 @@
     },
     "code_sha256": {
       "rag\\__init__.py": "bfd8f2f58544a30231cbc2156dba49130b49dac80711d6cda74107be8028356b",
-      "rag\\answer.py": "6e84c924a58295a8bcb4fd2ba9fcb1503d369cf6407a7711ef23796afb07e358",
-      "rag\\documents.py": "029e5e94a74247d427ea03b918e4d39c83861c199fe9b15e2f4fe785fe58df0f",
-      "rag\\embeddings.py": "81fd4888d4233502bbc8fd39cc1ea3b4effca10878e97480126d816ecaef291e",
-      "rag\\index.py": "9f9c2137a1675ae8657dc6c6f19934efc8595f62028e63a1484b33b744296baa",
-      "rag\\service.py": "d738dda5e790527c684354ec5347a423a09517a389c4260b7d0d1033e44305be",
-      "rag\\text.py": "13581b04270cb5f26ab150f17d67ed5fbe20fb74abdb2998e45a5ac66a82b684",
-      "scripts\\run_eval.py": "d2d4776cf857da97646841991e29da33b77471f27b89e36a0806e9ca5c0047cc"
+      "rag\\answer.py": "60ca55c99d6471659959051579a43a821c631f10c9fa11f383da8a1433925d82",
+      "rag\\api_requests.py": "304a5cfa765d5f0591bf935f989ceb81e7f1a4125dae25fa8492c57d8b366717",
+      "rag\\bundles.py": "6020959aa7ca3f58ed029a38a62403360a1a24bcbc85d5cdc8351f3d7075830c",
+      "rag\\documents.py": "af66033ffc3618c7182efa389e00948bdcec9c8495509eee0ed5bd1472632e4c",
+      "rag\\embeddings.py": "44c6d9e1840135be10be4e26939cf55f4c133d8ed28e2b02c31a289da289e311",
+      "rag\\history.py": "bb5937c764a72246ae502082b90f9690f98717f03b5b2dd8b5ef268720c045e5",
+      "rag\\index.py": "f3457747c6802a3cbf1b34470973b5411d4525d0f1667287b7791af764e4dd86",
+      "rag\\jobs.py": "fe2e7760f2c05f8505da02d4a757eb67c15182308d627cd98167014207667158",
+      "rag\\relations.py": "2fe944ba5958c3fbfd1465550743168b37fa0fc9941b538b4618625ed957778d",
+      "rag\\reviews.py": "ea6e242a1267eaee5a145031611d0fcd9aa1c422998e5a99eff3ab8192cecda5",
+      "rag\\service.py": "f721843ec93e324eb7440131691cb881e72cf088e1f9cd08cee092912e9e2eab",
+      "rag\\sources.py": "cc41769110d5460db0242802ccdae689ba0eeb6590bc9e92ceeffb01bf4e7c0c",
+      "rag\\study.py": "fa4a7340145d2992012ea40c37d23d052def3e097d0a49af5b5799aff534bbc0",
+      "rag\\text.py": "4cf3b6b9ce09c7c4d9b8b2f4642fe64ba004d01f34d0b427b714a3a7665e59fb",
+      "rag\\usage.py": "9e3c3f60f3ed902847a0c43ac8f956a9c82577cac96ba463c7dcf549a27385b7",
+      "rag\\watcher.py": "a1a33f50de5dd6ab358b82d45841557f10860986658106a9521d6447e4a1e4b5",
+      "scripts\\run_eval.py": "ebfe342c1ab7a44b5fd7b1e4efdeca5beddf3c6bf513577a25ea2305e9e85961"
     },
     "api_calls": 0
   },
@@ -62,17 +76,17 @@
       "answerable_questions": 47,
       "unanswerable_questions": 3,
       "document_hit_at_5": 0.723404255319149,
-      "gold_document_citation_rate": 0.5319148936170213,
-      "citation_presence_rate": 0.9361702127659575,
+      "gold_document_citation_rate": 0.40425531914893614,
+      "citation_presence_rate": 0.9574468085106383,
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
       "appropriate_abstention": 1.0,
-      "p50_search_latency_ms": 1.676,
-      "p95_search_latency_ms": 2.122,
-      "p50_answer_latency_ms": 0.012,
-      "p95_answer_latency_ms": 0.041,
-      "p50_total_latency_ms": 1.688,
-      "p95_total_latency_ms": 2.205,
+      "p50_search_latency_ms": 1.041,
+      "p95_search_latency_ms": 1.147,
+      "p50_answer_latency_ms": 0.694,
+      "p95_answer_latency_ms": 0.981,
+      "p50_total_latency_ms": 1.736,
+      "p95_total_latency_ms": 2.115,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -114,13 +128,13 @@
         {
           "id": "q07",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "03_reranking.md"
         },
         {
           "id": "q08",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "03_reranking.md"
         },
         {
@@ -204,13 +218,13 @@
         {
           "id": "q22",
           "hit": false,
-          "answer_status": "abstained",
+          "answer_status": "fallback",
           "top_result": "04_eval_plan.md"
         },
         {
           "id": "q23",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "abstained",
           "top_result": "08_productivity_study.md"
         },
         {
@@ -276,7 +290,7 @@
         {
           "id": "q34",
           "hit": false,
-          "answer_status": "abstained",
+          "answer_status": "fallback",
           "top_result": "19_resume_story.md"
         },
         {
@@ -294,7 +308,7 @@
         {
           "id": "q37",
           "hit": false,
-          "answer_status": "abstained",
+          "answer_status": "fallback",
           "top_result": "14_chunking.md"
         },
         {
@@ -336,7 +350,7 @@
         {
           "id": "q44",
           "hit": true,
-          "answer_status": "fallback",
+          "answer_status": "abstained",
           "top_result": "15_failure_analysis.md"
         },
         {
@@ -383,18 +397,18 @@
       "questions": 50,
       "answerable_questions": 47,
       "unanswerable_questions": 3,
-      "document_hit_at_5": 0.9574468085106383,
-      "gold_document_citation_rate": 0.7647058823529411,
-      "citation_presence_rate": 0.9787234042553191,
+      "document_hit_at_5": 1.0,
+      "gold_document_citation_rate": 0.8297872340425532,
+      "citation_presence_rate": 0.9574468085106383,
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
-      "appropriate_abstention": 1.0,
-      "p50_search_latency_ms": 1.131,
-      "p95_search_latency_ms": 1.339,
-      "p50_answer_latency_ms": 0.012,
-      "p95_answer_latency_ms": 0.033,
-      "p50_total_latency_ms": 1.153,
-      "p95_total_latency_ms": 1.352,
+      "appropriate_abstention": 0.3333333333333333,
+      "p50_search_latency_ms": 0.348,
+      "p95_search_latency_ms": 0.484,
+      "p50_answer_latency_ms": 0.7,
+      "p95_answer_latency_ms": 1.016,
+      "p50_total_latency_ms": 1.061,
+      "p95_total_latency_ms": 1.474,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -436,13 +450,13 @@
         {
           "id": "q07",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "03_reranking.md"
         },
         {
           "id": "q08",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "13_cost_note.md"
         },
         {
@@ -454,7 +468,7 @@
         {
           "id": "q10",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "02_hybrid_retrieval.md"
         },
         {
@@ -501,9 +515,9 @@
         },
         {
           "id": "q18",
-          "hit": false,
+          "hit": true,
           "answer_status": "fallback",
-          "top_result": "15_failure_analysis.md"
+          "top_result": "19_resume_story.md"
         },
         {
           "id": "q19",
@@ -527,12 +541,12 @@
           "id": "q22",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "09_privacy.md"
+          "top_result": "08_productivity_study.md"
         },
         {
           "id": "q23",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "abstained",
           "top_result": "08_productivity_study.md"
         },
         {
@@ -597,14 +611,14 @@
         },
         {
           "id": "q34",
-          "hit": false,
-          "answer_status": "abstained",
-          "top_result": null
+          "hit": true,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
         },
         {
           "id": "q35",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "12_latency_budget.md"
         },
         {
@@ -653,12 +667,12 @@
           "id": "q43",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "10_release_notes.md"
+          "top_result": "15_failure_analysis.md"
         },
         {
           "id": "q44",
           "hit": true,
-          "answer_status": "fallback",
+          "answer_status": "abstained",
           "top_result": "15_failure_analysis.md"
         },
         {
@@ -681,9 +695,9 @@
         },
         {
           "id": "q48",
-          "hit": true,
-          "answer_status": "abstained",
-          "top_result": null
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "17_openai_usage.md"
         },
         {
           "id": "q49",
@@ -693,9 +707,9 @@
         },
         {
           "id": "q50",
-          "hit": true,
-          "answer_status": "abstained",
-          "top_result": null
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
         }
       ]
     },
@@ -705,18 +719,18 @@
       "questions": 50,
       "answerable_questions": 47,
       "unanswerable_questions": 3,
-      "document_hit_at_5": 0.9361702127659575,
-      "gold_document_citation_rate": 0.6078431372549019,
-      "citation_presence_rate": 0.9787234042553191,
+      "document_hit_at_5": 0.9574468085106383,
+      "gold_document_citation_rate": 0.5957446808510638,
+      "citation_presence_rate": 0.9574468085106383,
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
-      "appropriate_abstention": 1.0,
-      "p50_search_latency_ms": 1.937,
-      "p95_search_latency_ms": 3.197,
-      "p50_answer_latency_ms": 0.013,
-      "p95_answer_latency_ms": 0.047,
-      "p50_total_latency_ms": 1.95,
-      "p95_total_latency_ms": 3.231,
+      "appropriate_abstention": 0.3333333333333333,
+      "p50_search_latency_ms": 1.393,
+      "p95_search_latency_ms": 1.648,
+      "p50_answer_latency_ms": 0.732,
+      "p95_answer_latency_ms": 0.923,
+      "p50_total_latency_ms": 2.13,
+      "p95_total_latency_ms": 2.634,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -758,25 +772,25 @@
         {
           "id": "q07",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "03_reranking.md"
         },
         {
           "id": "q08",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "03_reranking.md"
         },
         {
           "id": "q09",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "19_resume_story.md"
+          "top_result": "03_reranking.md"
         },
         {
           "id": "q10",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "02_hybrid_retrieval.md"
         },
         {
@@ -811,7 +825,7 @@
         },
         {
           "id": "q16",
-          "hit": true,
+          "hit": false,
           "answer_status": "fallback",
           "top_result": "15_failure_analysis.md"
         },
@@ -823,7 +837,7 @@
         },
         {
           "id": "q18",
-          "hit": false,
+          "hit": true,
           "answer_status": "fallback",
           "top_result": "15_failure_analysis.md"
         },
@@ -849,12 +863,12 @@
           "id": "q22",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "08_productivity_study.md"
+          "top_result": "04_eval_plan.md"
         },
         {
           "id": "q23",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "abstained",
           "top_result": "08_productivity_study.md"
         },
         {
@@ -885,7 +899,7 @@
           "id": "q28",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "09_privacy.md"
+          "top_result": "07_incremental_indexing.md"
         },
         {
           "id": "q29",
@@ -919,14 +933,14 @@
         },
         {
           "id": "q34",
-          "hit": false,
-          "answer_status": "abstained",
+          "hit": true,
+          "answer_status": "fallback",
           "top_result": "19_resume_story.md"
         },
         {
           "id": "q35",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "12_latency_budget.md"
         },
         {
@@ -939,7 +953,7 @@
           "id": "q37",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "13_cost_note.md"
+          "top_result": "03_reranking.md"
         },
         {
           "id": "q38",
@@ -980,7 +994,7 @@
         {
           "id": "q44",
           "hit": true,
-          "answer_status": "fallback",
+          "answer_status": "abstained",
           "top_result": "15_failure_analysis.md"
         },
         {
@@ -1003,9 +1017,9 @@
         },
         {
           "id": "q48",
-          "hit": true,
-          "answer_status": "abstained",
-          "top_result": "20_ontology_scope.md"
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
         },
         {
           "id": "q49",
@@ -1015,9 +1029,9 @@
         },
         {
           "id": "q50",
-          "hit": true,
-          "answer_status": "abstained",
-          "top_result": "20_ontology_scope.md"
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
         }
       ]
     },
@@ -1027,18 +1041,18 @@
       "questions": 50,
       "answerable_questions": 47,
       "unanswerable_questions": 3,
-      "document_hit_at_5": 0.9574468085106383,
-      "gold_document_citation_rate": 0.7058823529411765,
-      "citation_presence_rate": 0.9787234042553191,
+      "document_hit_at_5": 0.9787234042553191,
+      "gold_document_citation_rate": 0.7021276595744681,
+      "citation_presence_rate": 0.9574468085106383,
       "semantic_citation_precision": null,
       "grounded_answer_rate": null,
-      "appropriate_abstention": 1.0,
-      "p50_search_latency_ms": 1.961,
-      "p95_search_latency_ms": 2.249,
-      "p50_answer_latency_ms": 0.013,
-      "p95_answer_latency_ms": 0.035,
-      "p50_total_latency_ms": 1.974,
-      "p95_total_latency_ms": 2.262,
+      "appropriate_abstention": 0.3333333333333333,
+      "p50_search_latency_ms": 1.417,
+      "p95_search_latency_ms": 1.799,
+      "p50_answer_latency_ms": 0.736,
+      "p95_answer_latency_ms": 1.092,
+      "p50_total_latency_ms": 2.165,
+      "p95_total_latency_ms": 2.739,
       "estimated_cost_per_query_usd": 0.0,
       "cases": [
         {
@@ -1080,13 +1094,13 @@
         {
           "id": "q07",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "03_reranking.md"
         },
         {
           "id": "q08",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "13_cost_note.md"
         },
         {
@@ -1098,7 +1112,7 @@
         {
           "id": "q10",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "02_hybrid_retrieval.md"
         },
         {
@@ -1176,7 +1190,7 @@
         {
           "id": "q23",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "abstained",
           "top_result": "08_productivity_study.md"
         },
         {
@@ -1207,7 +1221,7 @@
           "id": "q28",
           "hit": true,
           "answer_status": "fallback",
-          "top_result": "09_privacy.md"
+          "top_result": "07_incremental_indexing.md"
         },
         {
           "id": "q29",
@@ -1241,14 +1255,14 @@
         },
         {
           "id": "q34",
-          "hit": false,
-          "answer_status": "abstained",
+          "hit": true,
+          "answer_status": "fallback",
           "top_result": "19_resume_story.md"
         },
         {
           "id": "q35",
           "hit": true,
-          "answer_status": "conflict",
+          "answer_status": "fallback",
           "top_result": "12_latency_budget.md"
         },
         {
@@ -1302,7 +1316,7 @@
         {
           "id": "q44",
           "hit": true,
-          "answer_status": "fallback",
+          "answer_status": "abstained",
           "top_result": "15_failure_analysis.md"
         },
         {
@@ -1325,9 +1339,9 @@
         },
         {
           "id": "q48",
-          "hit": true,
-          "answer_status": "abstained",
-          "top_result": "20_ontology_scope.md"
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "08_productivity_study.md"
         },
         {
           "id": "q49",
@@ -1337,9 +1351,9 @@
         },
         {
           "id": "q50",
-          "hit": true,
-          "answer_status": "abstained",
-          "top_result": "20_ontology_scope.md"
+          "hit": false,
+          "answer_status": "fallback",
+          "top_result": "03_reranking.md"
         }
       ]
     }

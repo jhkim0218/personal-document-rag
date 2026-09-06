@@ -1,0 +1,28 @@
+{
+  "provenance": "AI-authored development regression set; not human reviewed or independent holdout",
+  "documents": {
+    "deployment.md": "# 배포 계획\n오리온 배포 일정은 9월 20일입니다. 롤백 담당자는 운영팀입니다.",
+    "latency.md": "# 성능 기준\n오리온 응답 지연 목표는 200ms입니다. 배포 날짜를 정의하지 않습니다.",
+    "fusion.md": "# 검색 결합\nReciprocal rank fusion combines ranked keyword and vector candidates.",
+    "recovery.md": "# 복구\nRecovery time objective is thirty minutes. Backup retention is seven days.",
+    "timeout.md": "# 오류 조치\nERR_CONN_1042는 연결 제한 시간 초과입니다. 연결 풀을 점검하세요.",
+    "auth.md": "# 인증 조치\nERR_CONN_1043는 인증 실패입니다. 토큰을 갱신하세요.",
+    "긴급_복구_절차.md": "# 운영 지침\n서비스를 중단한 뒤 백업에서 복원합니다.",
+    "billing/guide.txt": "월 단위로 사용량을 집계합니다. 요금 검토는 매월 말 수행합니다.",
+    "limits.md": "# 제한\n큐 크기는 100개입니다. 쿼터는 200개입니다.",
+    "schedule.md": "# 일정\n오리온 회의 일정은 화요일입니다. 배포 승인과는 별개입니다."
+  },
+  "queries": [
+    {"id":"ko-1","type":"korean","query":"배포 일정","expected":"deployment.md"},
+    {"id":"ko-2","type":"korean","query":"배포일정은","expected":"deployment.md"},
+    {"id":"ko-3","type":"korean","query":"응답지연 목표","expected":"latency.md"},
+    {"id":"ko-4","type":"korean","query":"큐 크기","expected":"limits.md"},
+    {"id":"syn-1","type":"synonym","query":"RRF","expected":"fusion.md"},
+    {"id":"syn-2","type":"synonym","query":"RTO","expected":"recovery.md"},
+    {"id":"syn-3","type":"synonym","query":"복구시간목표","expected":"recovery.md"},
+    {"id":"id-1","type":"identifier","query":"ERR_CONN_1042","expected":"timeout.md"},
+    {"id":"id-2","type":"identifier","query":"ERR_CONN_1043","expected":"auth.md"},
+    {"id":"file-1","type":"filename","query":"긴급_복구_절차.md","expected":"긴급_복구_절차.md"},
+    {"id":"path-1","type":"path","query":"billing/guide.txt","expected":"billing/guide.txt"}
+  ]
+}

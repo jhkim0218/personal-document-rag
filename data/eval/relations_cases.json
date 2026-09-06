@@ -1,0 +1,19 @@
+{
+  "provenance": "AI-authored synthetic development data; relation maps are explicit test configuration, not inferred links",
+  "documents": {
+    "minutes.md": "# Aurora launch approval\nAurora launch approval requires the meeting decision record.",
+    "spec.md": "# Aurora delivery specification\nThe delivery specification defines the approved launch scope.",
+    "runbook.md": "# Aurora rollback runbook\nThe rollback runbook is required evidence for the launch approval package.",
+    "notes-1.md": "# Aurora notes\nAurora weekly notes mention approvals in general.",
+    "notes-2.md": "# Aurora notes\nAurora planning notes mention a launch without a decision package.",
+    "notes-3.md": "# Aurora notes\nAurora operations notes mention rollback training.",
+    "notes-4.md": "# Aurora notes\nAurora stakeholder notes mention approval status.",
+    "notes-5.md": "# Aurora notes\nAurora delivery notes mention a release checklist."
+  },
+  "relations": {
+    "projects": [{"name": "Aurora", "decisions": [{"name": "Launch approval", "documents": ["minutes.md", "spec.md", "runbook.md"]}]}]
+  },
+  "queries": [
+    {"id": "launch-approval-package", "search_query": "Aurora launch approval", "relation_query": "Launch approval", "gold_documents": ["minutes.md", "spec.md", "runbook.md"]}
+  ]
+}

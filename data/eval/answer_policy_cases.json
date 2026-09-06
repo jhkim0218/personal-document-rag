@@ -1,0 +1,13 @@
+{
+  "provenance": "AI-authored synthetic development data; not human-reviewed semantic evaluation",
+  "documents": {
+    "change.md": "# Deployment\nThe deployment changed from 2026-04-10 to 2026-04-17.",
+    "latency.md": "# Latency\nThe p50 latency is 100ms.",
+    "complete.md": "# Complete change\nThe deployment changed from 2026-04-10 to 2026-04-17 because approval was delayed."
+  },
+  "queries": [
+    {"id": "missing-reason", "question": "What changed before and after, and why?", "documents": ["change.md"], "requires_partial": true},
+    {"id": "missing-p95", "question": "What are p50 and p95 latency?", "documents": ["latency.md"], "requires_partial": true},
+    {"id": "complete-change", "question": "What changed before and after, and why?", "documents": ["complete.md"], "requires_partial": false}
+  ]
+}

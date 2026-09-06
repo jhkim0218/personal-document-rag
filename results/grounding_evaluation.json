@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "time_utc": "2026-09-06T03:13:24.664478+00:00",
+  "mode": "offline",
+  "embedding": "local:hash-256",
+  "generation": "local:extractive",
+  "top_k": 5,
+  "rerank": true,
+  "fixture_sha256": "70d80caff3d0b990a007b95d6849d89604f17dba4720520f9812db29f214cec2",
+  "api_usage": {
+    "requests": 0,
+    "tokens": 0
+  },
+  "api_cost_usd": 0,
+  "local_compute_cost_usd": null,
+  "provenance": "AI-authored synthetic development data; not human-reviewed or independent holdout",
+  "metrics": {
+    "literal_gold_evidence_recall_at_5": 1.0,
+    "literal_gold_citation_coverage": 0.875,
+    "literal_cited_claim_support_precision": 1.0,
+    "semantic_citation_precision": null,
+    "grounded_answer_rate": null
+  },
+  "cases": [
+    {
+      "id": "schedule",
+      "type": "multi_document_change",
+      "gold_count": 3,
+      "retrieved_gold": [
+        true,
+        true,
+        true
+      ],
+      "cited_gold": [
+        true,
+        true,
+        false
+      ],
+      "literal_cited_claims_supported": 2,
+      "literal_cited_claims_total": 2,
+      "answer_status": "changed",
+      "sources": [
+        {
+          "path": "decision.md",
+          "location": "heading: 최종 결정",
+          "excerpt": "2026년 9월 4일 결정으로 오로라 배포일을 9월 10일에서 9월 17일로 변경한다."
+        },
+        {
+          "path": "minutes.md",
+          "location": "heading: 초기 일정",
+          "excerpt": "오로라 초기 배포일은 2026년 9월 10일이다."
+        },
+        {
+          "path": "decision.md",
+          "location": "heading: 적용 범위",
+          "excerpt": "이 변경은 오로라 프로젝트에만 적용한다."
+        },
+        {
+          "path": "decision.md",
+          "location": "heading: 변경 배경",
+          "excerpt": "오로라 배포 일정 변경 검토는 복구 훈련 중 발견된 로그 누락에서 시작됐다."
+        },
+        {
+          "path": "spec.md",
+          "location": "heading: 보존 정책",
+          "excerpt": "오로라 임시 작업 로그 보존 기간은 14일이다."
+        }
+      ]
+    },
+    {
+      "id": "approval",
+      "type": "fact",
+      "gold_count": 1,
+      "retrieved_gold": [
+        true
+      ],
+      "cited_gold": [
+        true
+      ],
+      "literal_cited_claims_supported": 1,
+      "literal_cited_claims_total": 1,
+      "answer_status": "fallback",
+      "sources": [
+        {
+          "path": "minutes.md",
+          "location": "heading: 승인 조건",
+          "excerpt": "오로라 운영 승인 조건은 장부 합계와 거래 건수의 동시 일치다."
+        }
+      ]
+    },
+    {
+      "id": "rto",
+      "type": "synonym",
+      "gold_count": 1,
+      "retrieved_gold": [
+        true
+      ],
+      "cited_gold": [
+        true
+      ],
+      "literal_cited_claims_supported": 1,
+      "literal_cited_claims_total": 1,
+      "answer_status": "fallback",
+      "sources": [
+        {
+          "path": "runbook.md",
+          "location": "heading: 복구 기준",
+          "excerpt": "오로라 복구 시간 목표(RTO)는 30분이다."
+        }
+      ]
+    },
+    {
+      "id": "error",
+      "type": "identifier",
+      "gold_count": 1,
+      "retrieved_gold": [
+        true
+      ],
+      "cited_gold": [
+        true
+      ],
+      "literal_cited_claims_supported": 1,
+      "literal_cited_claims_total": 1,
+      "answer_status": "fallback",
+      "sources": [
+        {
+          "path": "runbook.md",
+          "location": "heading: 오류 코드",
+          "excerpt": "ERR_LEDGER_042는 거래 식별자 중복을 뜻하며 해당 파일만 격리한 뒤 원본을 확인한다."
+        }
+      ]
+    },
+    {
+      "id": "performance",
+      "type": "multiple_values",
+      "gold_count": 1,
+      "retrieved_gold": [
+        true
+      ],
+      "cited_gold": [
+        true
+      ],
+      "literal_cited_claims_supported": 1,
+      "literal_cited_claims_total": 1,
+      "answer_status": "fallback",
+      "sources": [
+        {
+          "path": "spec.md",
+          "location": "heading: 성능 예산",
+          "excerpt": "오로라 검색 p50 목표는 200ms이고 p95 목표는 800ms다."
+        }
+      ]
+    },
+    {
+      "id": "retention",
+      "type": "fact",
+      "gold_count": 1,
+      "retrieved_gold": [
+        true
+      ],
+      "cited_gold": [
+        true
+      ],
+      "literal_cited_claims_supported": 1,
+      "literal_cited_claims_total": 1,
+      "answer_status": "fallback",
+      "sources": [
+        {
+          "path": "spec.md",
+          "location": "heading: 보존 정책",
+          "excerpt": "오로라 임시 작업 로그 보존 기간은 14일이다."
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Gold labels are AI-authored development labels in the input fixture, not human-reviewed semantic judgments.",
+    "A citation counts only when its displayed excerpt contains the labeled source span; a same-file wrong sentence fails.",
+    "Claim support uses exact sentence containment and rejects unsupported cited claims, but does not score paraphrase entailment.",
+    "semantic_citation_precision and grounded_answer_rate remain null until human-reviewed claim/evidence judgments exist."
+  ]
+}

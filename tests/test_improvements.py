@@ -59,19 +59,19 @@ class ImprovementTests(unittest.TestCase):
         finally:
             index.close()
 
-    def test_sql_write_failure_rolls_back_document_and_fts(self):
+    def test_sql_write_failure_rolls_back_document_and_revision(self):
         index = RAGIndex(self.db, embeddings=Embeddings(api_key=''))
         try:
             index.index_directory(self.a)
             old = index.search('launch')[0]
+            revision = index.connection.execute('SELECT value FROM index_revision WHERE id=1').fetchone()[0]
             (self.a / 'alpha.txt').write_text('Alpha launch Tuesday.', encoding='utf-8')
             index.connection.execute("CREATE TRIGGER inject_failure BEFORE INSERT ON chunks BEGIN SELECT RAISE(ABORT, 'injected'); END")
             failed = index.index_directory(self.a)
             self.assertEqual(len(failed.failed), 1)
             self.assertEqual(index.source(old.chunk_id)['text'], old.text)
             self.assertEqual(index.status()['documents'], 1)
-            if index.fts_enabled:
-                self.assertEqual(index.connection.execute('SELECT COUNT(*) FROM chunks_fts').fetchone()[0], 1)
+            self.assertEqual(index.connection.execute('SELECT value FROM index_revision WHERE id=1').fetchone()[0], revision)
         finally:
             index.close()
 

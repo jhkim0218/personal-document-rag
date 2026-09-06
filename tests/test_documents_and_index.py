@@ -47,6 +47,25 @@ def write_pdf(path: Path, text: str) -> None:
     path.write_bytes(content)
 
 
+def write_pptx(path: Path) -> None:
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("ppt/slides/slide2.xml", '<p:sld xmlns:p="p" xmlns:a="a"><a:t>Second slide</a:t></p:sld>')
+        archive.writestr("ppt/slides/slide1.xml", '<p:sld xmlns:p="p" xmlns:a="a"><a:t>First slide</a:t></p:sld>')
+
+
+def write_xlsx(path: Path) -> None:
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("xl/workbook.xml", '''<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Decisions" sheetId="1" r:id="rId1"/></sheets></workbook>''')
+        archive.writestr("xl/_rels/workbook.xml.rels", '''<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>''')
+        archive.writestr("xl/sharedStrings.xml", '''<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><si><t>Launch date</t></si></sst>''')
+        archive.writestr("xl/worksheets/sheet1.xml", '''<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row><c r="A1" t="s"><v>0</v></c><c r="B1"><f>SUM(A2:A3)</f><v>5</v></c><c r="C1" t="inlineStr"><is><t>Owner</t></is></c></row></sheetData></worksheet>''')
+
+
+def write_hwpx(path: Path) -> None:
+    with zipfile.ZipFile(path, "w") as archive:
+        archive.writestr("Contents/section0.xml", '<hp:sec xmlns:hp="urn:hwpx"><hp:t>HWPX decision text</hp:t></hp:sec>')
+
+
 class DocumentAndIndexTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
@@ -67,6 +86,18 @@ class DocumentAndIndexTests(unittest.TestCase):
             chunks = to_chunks(document)
             self.assertTrue(chunks)
             self.assertTrue(chunks[0][0].startswith(location_prefix), chunks[0][0])
+
+    def test_parses_office_archives_with_slide_sheet_cell_and_section_locations(self) -> None:
+        write_pptx(self.root / "deck.pptx")
+        write_xlsx(self.root / "decisions.xlsx")
+        write_hwpx(self.root / "record.hwpx")
+        pptx = parse_document(self.root / "deck.pptx")
+        self.assertEqual([(section.location, section.text) for section in pptx.sections], [('slide 1', 'First slide'), ('slide 2', 'Second slide')])
+        xlsx = parse_document(self.root / "decisions.xlsx")
+        self.assertEqual([(section.location, section.text) for section in xlsx.sections], [('sheet: Decisions · cell A1', 'Launch date'), ('sheet: Decisions · cell B1', '=SUM(A2:A3) → 5'), ('sheet: Decisions · cell C1', 'Owner')])
+        hwpx = parse_document(self.root / "record.hwpx")
+        self.assertEqual([(section.location, section.text) for section in hwpx.sections], [('section 1', 'HWPX decision text')])
+        self.assertEqual(self.index.index_directory(self.root).indexed, 7)
 
     def test_incremental_indexing_reindexes_changes_and_removes_deleted_documents(self) -> None:
         first = self.index.index_directory(self.root)
