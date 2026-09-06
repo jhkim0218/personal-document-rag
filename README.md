@@ -75,6 +75,14 @@ python scripts/run_eval.py --data data/sample --questions data/eval/questions.js
 
 로컬 모델 평가는 모델 파일 수·바이트·SHA-256, Python 할당 peak, 지연시간과 검색 지표를 기록합니다. accelerator/native 메모리와 사람 검토 비용은 측정하지 않으며, 합성 개발 세트 점수는 실제 업무 품질이나 독립 holdout 성능이 아닙니다.
 
+회사 PC에서 선택 기능을 켜기 전에는 읽기 전용 사전 점검을 실행할 수 있습니다. 이 명령은 문서를 열거나 네트워크 요청을 보내지 않으며, 필요한 실행 파일·로컬 모델 경로·Python 패키지가 있는지만 확인합니다.
+
+```powershell
+python scripts/preflight.py --require ocr --ocr-executable C:\Program Files\Tesseract-OCR\tesseract.exe
+python scripts/preflight.py --require local-model --local-embedding-model D:\models\embedding-model
+python scripts/preflight.py --require hwp --hwp-executable C:\tools\hwp5txt.exe
+```
+
 스캔된 PDF가 실제 검색 누락 원인일 때만 로컬 Tesseract를 설치하고 `--ocr`을 사용하세요. 텍스트가 이미 추출되는 PDF에는 실행하지 않으며, 이미지 전용 페이지는 `page N · OCR` 위치로 저장합니다. Tesseract 또는 지정 언어 팩이 없거나 OCR이 실패하면 해당 파일을 조용히 비워 색인하지 않고 오류·재시도 목록에 남깁니다.
 
 ```powershell
