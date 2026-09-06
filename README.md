@@ -135,6 +135,12 @@ python scripts/benchmark_search.py
 
 `results/answer_policy_evaluation.json`은 명시적으로 불완전한 fixture에서 permissive와 `부분 근거` 정책을 비교합니다. 현재 required 2개 case에서는 permissive 0%, required-literal partial 100%이지만, 문서 범위를 case별로 고정한 정책 격리 실험이며 검색 품질·의미적 정확도·실사용 효과가 아닙니다.
 
+실제 최종 확인용 질의는 공개 저장소나 개발 50문항과 분리해 보관하세요. 아래 검사는 holdout의 질문 중복, 문서·위치·필수 사실 라벨, 사람 검수 상태만 확인하며 내용을 외부로 보내지 않습니다. `ai-draft`는 형식 검토용일 뿐 성능 증거가 아니고, 최종 수치 전에는 `--require-human-review`를 지정합니다.
+
+```powershell
+python scripts/validate_holdout.py --development data\eval\questions.jsonl --holdout D:\private\rag-holdout.jsonl --require-human-review
+```
+
 처음 실행할 때 `--data`가 기본 폴더가 됩니다. 화면의 **검색 폴더 설정**에서 여러 폴더를 추가하고 활성/비활성, 포함/제외 하위 경로, 확장자를 설정할 수 있습니다. 저장 전 범위 미리보기로 대상 파일을 확인하세요. 설정을 저장하면 검색·문서 수·출처 범위에 즉시 반영되며 새 파일은 “변경 파일 색인” 후 검색됩니다. 설정은 DB 옆 `*.sources.json`에 저장되어 재시작 시 `--data`보다 우선합니다. 별도 설정을 사용하려면 다른 `--db`를 지정하세요.
 
 `.git`, `.local`, 가상환경, 캐시, 임시 Office 파일은 기본 제외합니다. 하위 경로 필터는 glob이 아닌 상대 경로이며 `..`로 루트 밖을 지정할 수 없습니다. 비활성 폴더의 이전 색인은 DB에 남아도 검색/출처/원본 조회에 나오지 않습니다. PC 전체 자동 검색이나 폴더 자동 감시는 아직 없습니다. 변경 없는 파일도 해시 확인을 위해 읽지만 파싱·임베딩은 생략합니다.
