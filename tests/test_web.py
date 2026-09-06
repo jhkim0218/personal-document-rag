@@ -99,9 +99,11 @@ class WebTests(unittest.TestCase):
     def test_private_review_save_and_human_verdict_http(self) -> None:
         self.request('/api/index', 'POST')
         answer = self.request('/api/ask', 'POST', {'question': 'What does RRF combine?'})
-        saved = self.request('/api/reviews/save', 'POST', {'question': 'What does RRF combine?', 'answer': answer})
+        saved = self.request('/api/reviews/save', 'POST', {'question': 'What does RRF combine?', 'answer': answer, 'experiment': 'candidate'})
         review = saved['reviews'][0]
         self.assertEqual(review['verdict'], 'pending')
+        self.assertEqual(review['experiment'], 'candidate')
+        self.assertEqual(saved['experiments'][0]['label'], 'candidate')
         self.assertNotIn('context', review['sources'][0])
         judged = self.request('/api/reviews/verdict', 'POST', {'id': review['id'], 'verdict': 'supported', 'notes': 'Checked source'})
         self.assertEqual(judged['summary']['supported'], 1)

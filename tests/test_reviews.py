@@ -56,3 +56,14 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(exported['claims']['pending'], 1)
         self.assertNotIn('Private launch question', json.dumps(exported))
         self.assertNotIn('C:/private', json.dumps(exported))
+
+    def test_private_experiment_groups_compare_verdicts_without_public_labels(self):
+        baseline = self.reviews.save({'question': 'Private baseline question?', 'answer': answer(), 'experiment': 'Private baseline'})['reviews'][0]
+        candidate = self.reviews.save({'question': 'Private candidate question?', 'answer': answer(), 'experiment': 'Private candidate'})['reviews'][0]
+        status = self.reviews.verdict({'id': baseline['id'], 'verdict': 'supported'})
+        groups = {group['label']: group for group in status['experiments']}
+        self.assertEqual(groups['Private baseline']['reviews']['supported'], 1)
+        self.assertEqual(groups['Private candidate']['reviews']['pending'], 1)
+        exported = json.dumps(self.reviews.export())
+        self.assertNotIn('Private baseline', exported)
+        self.assertNotIn('Private candidate', exported)

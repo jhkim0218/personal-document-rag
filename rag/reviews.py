@@ -24,12 +24,15 @@ class Reviews:
         self.lock = RLock()
         self.connection.execute('''CREATE TABLE IF NOT EXISTS reviews (
             id TEXT PRIMARY KEY, created_at TEXT NOT NULL, question TEXT NOT NULL, answer_status TEXT NOT NULL,
-            answer_text TEXT NOT NULL, sources_json TEXT NOT NULL, verdict TEXT NOT NULL, notes TEXT NOT NULL,
+            answer_text TEXT NOT NULL, sources_json TEXT NOT NULL, experiment TEXT NOT NULL DEFAULT '', verdict TEXT NOT NULL, notes TEXT NOT NULL,
             reviewed_at TEXT)''')
         self.connection.execute('''CREATE TABLE IF NOT EXISTS review_claims (
             id TEXT PRIMARY KEY, review_id TEXT NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
             sentence TEXT NOT NULL, citations_json TEXT NOT NULL, verdict TEXT NOT NULL, notes TEXT NOT NULL,
             reviewed_at TEXT)''')
+        columns = {row['name'] for row in self.connection.execute('PRAGMA table_info(reviews)')}
+        if 'experiment' not in columns:
+            self.connection.execute("ALTER TABLE reviews ADD COLUMN experiment TEXT NOT NULL DEFAULT ''")
         self.connection.commit()
 
     def close(self):
@@ -53,15 +56,22 @@ class Reviews:
     def status(self):
         with self.lock:
             rows = [dict(row) for row in self.connection.execute('SELECT * FROM reviews ORDER BY created_at DESC')]
+            experiments = {}
             for row in rows:
                 row['sources'] = json.loads(row.pop('sources_json'))
                 claims = [dict(claim) for claim in self.connection.execute('SELECT * FROM review_claims WHERE review_id=? ORDER BY rowid', (row['id'],))]
                 for claim in claims:
                     claim['citations'] = json.loads(claim.pop('citations_json'))
                 row['claims'] = claims
+                experiment = row['experiment'] or '미지정'
+                grouped = experiments.setdefault(experiment, {'label': experiment, 'reviews': {verdict: 0 for verdict in ('pending', 'supported', 'partial', 'unsupported')}, 'claims': {verdict: 0 for verdict in ('pending', 'supported', 'partial', 'unsupported')}})
+                grouped['reviews'][row['verdict']] += 1
+                for claim in claims:
+                    grouped['claims'][claim['verdict']] += 1
             claims = [claim for row in rows for claim in row['claims']]
             return {'reviews': rows, 'summary': {verdict: sum(row['verdict'] == verdict for row in rows) for verdict in ('pending', 'supported', 'partial', 'unsupported')},
                     'claim_summary': {verdict: sum(claim['verdict'] == verdict for claim in claims) for verdict in ('pending', 'supported', 'partial', 'unsupported')},
+                    'experiments': [experiments[label] for label in sorted(experiments)],
                     'privacy': 'Local private review journal; answer text, paths, and notes are not safe to publish without review',
                     'provenance': 'Human-entered verdicts; no automatic semantic judgment'}
 
@@ -91,14 +101,15 @@ class Reviews:
             raise ValueError('question and answer are required')
         question = data['question'].strip()
         answer = data['answer']
+        experiment = data.get('experiment', '')
         status, text = answer.get('status'), answer.get('text')
-        if not 1 <= len(question) <= 2000 or not isinstance(status, str) or not 1 <= len(status) <= 40 or not isinstance(text, str) or not 1 <= len(text) <= 12000:
+        if not isinstance(experiment, str) or len(experiment.strip()) > 80 or any(ord(character) < 32 for character in experiment) or not 1 <= len(question) <= 2000 or not isinstance(status, str) or not 1 <= len(status) <= 40 or not isinstance(text, str) or not 1 <= len(text) <= 12000:
             raise ValueError('Invalid question or answer')
         sources = self._sources(answer.get('sources'))
         review_id = uuid4().hex
         with self.lock, self.connection:
-            self.connection.execute('INSERT INTO reviews(id,created_at,question,answer_status,answer_text,sources_json,verdict,notes) VALUES(?,?,?,?,?,?,?,?)',
-                                    (review_id, now(), question, status, text, json.dumps(sources, ensure_ascii=False), 'pending', ''))
+            self.connection.execute('INSERT INTO reviews(id,created_at,question,answer_status,answer_text,sources_json,experiment,verdict,notes) VALUES(?,?,?,?,?,?,?,?,?)',
+                                    (review_id, now(), question, status, text, json.dumps(sources, ensure_ascii=False), experiment.strip(), 'pending', ''))
             for sentence, citations in self._claims(text):
                 self.connection.execute('INSERT INTO review_claims(id,review_id,sentence,citations_json,verdict,notes) VALUES(?,?,?,?,?,?)',
                                         (uuid4().hex, review_id, sentence, json.dumps(citations), 'pending', ''))
